@@ -1,0 +1,21 @@
+﻿/*
+* Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
+* See LICENSE in the project root for license information.
+*/
+h1 {
+    text-align:center;
+}
+
+h1:first-letter {
+    color: red;
+}
+
+nav {
+    text-align:center;
+}
+
+    nav > a {
+        font-size:24px;
+        padding:16px;
+    }
+

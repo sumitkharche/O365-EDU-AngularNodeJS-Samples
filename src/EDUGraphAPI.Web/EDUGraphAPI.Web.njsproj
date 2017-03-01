@@ -1,0 +1,323 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <Name>EDUGraphAPI.API</Name>
+    <RootNamespace>EDUGraphAPI.API</RootNamespace>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+    <NameOfLastUsedPublishProfile>edugraphapi2dev - Web Deploy</NameOfLastUsedPublishProfile>
+    <LaunchUrl>https://localhost</LaunchUrl>
+    <Environment>WEBSITE_HOSTNAME=localhost:44380
+clientId=37443f61-5fe1-4a1b-8778-e251b3df885b
+clientSecret=6kigm8YcEGyQ1BSeGvOo6lSN0oyvYizvT1lvNIdBzsU=
+BingMapKey=AgWV4amBPg2dzbgGPB8Ya5GDfGqBnueTJUfu1oAAilDje_vXB0RpKGF4mDabOmwB
+sourceCodeRepositoryUrl=https://github.com/TylerLu/EDUGraphAPI2
+SQLiteDB=database.sqlite</Environment>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{e94df9fe-9f95-4d1f-8b7d-a64bba55e0da}</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>app.ts</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
+    <ProjectView>ProjectFiles</ProjectView>
+    <NodejsPort>44380</NodejsPort>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+    <TypeScriptModuleKind>CommonJS</TypeScriptModuleKind>
+    <EnableTypeScript>true</EnableTypeScript>
+    <StartWebBrowser>True</StartWebBrowser>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+    <TypeScriptOutFile />
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="app\aboutme\aboutme.component.ts" />
+    <TypeScriptCompile Include="app\aboutme\aboutme.ts" />
+    <TypeScriptCompile Include="app\admin\admin-routing.ts" />
+    <TypeScriptCompile Include="app\admin\consent.component.ts" />
+    <TypeScriptCompile Include="app\admin\admin.component.ts" />
+    <TypeScriptCompile Include="app\admin\admin.module.ts" />
+    <TypeScriptCompile Include="app\admin\admin.service.ts" />
+    <TypeScriptCompile Include="app\admin\linkedAccounts.component.ts" />
+    <TypeScriptCompile Include="app\app.component.ts" />
+    <TypeScriptCompile Include="app\app.module.ts" />
+    <TypeScriptCompile Include="app\app.routing.ts" />
+    <TypeScriptCompile Include="app\authHelper\authHelper.ts" />
+    <TypeScriptCompile Include="app\constants.ts" />
+    <TypeScriptCompile Include="app\demoHelper\demoHelper.component.ts" />
+    <TypeScriptCompile Include="app\demoHelper\demoHelperPage.ts" />
+    <TypeScriptCompile Include="app\demoHelper\demoHelperService.ts" />
+    <TypeScriptCompile Include="app\header\header.component.ts" />
+    <TypeScriptCompile Include="app\link\link-routing.ts" />
+    <TypeScriptCompile Include="app\link\link.component.ts" />
+    <TypeScriptCompile Include="app\link\link.createLocal.component.ts" />
+    <TypeScriptCompile Include="app\link\link.loginLocal.component.ts" />
+    <TypeScriptCompile Include="app\link\link.loginO365Required.component.ts" />
+    <TypeScriptCompile Include="app\link\link.module.ts" />
+    <TypeScriptCompile Include="app\link\link.service.ts" />
+    <TypeScriptCompile Include="app\link\link.ts" />
+    <TypeScriptCompile Include="app\login\login.component.ts" />
+    <TypeScriptCompile Include="app\main.ts" />
+    <TypeScriptCompile Include="app\models\common\colorEntity.ts" />
+    <TypeScriptCompile Include="app\models\common\organization.ts" />
+    <TypeScriptCompile Include="app\models\common\userInfo.ts" />
+    <TypeScriptCompile Include="app\home.component.ts" />
+    <TypeScriptCompile Include="app\O365login\O365login.component.ts" />
+    <TypeScriptCompile Include="app\register\register.component.ts" />
+    <TypeScriptCompile Include="app\register\register.ts" />
+    <TypeScriptCompile Include="app\school\classdetail.component.ts" />
+    <TypeScriptCompile Include="app\school\classes.component.ts" />
+    <TypeScriptCompile Include="app\school\classes.ts" />
+    <TypeScriptCompile Include="app\school\conversation.ts" />
+    <TypeScriptCompile Include="app\school\customdirectives.ts" />
+    <TypeScriptCompile Include="app\school\document.ts" />
+    <TypeScriptCompile Include="app\school\myclasses.component.ts" />
+    <TypeScriptCompile Include="app\school\school-routing.ts" />
+    <TypeScriptCompile Include="app\school\school.component.ts" />
+    <TypeScriptCompile Include="app\school\school.module.ts" />
+    <TypeScriptCompile Include="app\school\school.service.ts" />
+    <TypeScriptCompile Include="app\school\school.ts" />
+    <TypeScriptCompile Include="app\school\seatingarrangements.ts" />
+    <TypeScriptCompile Include="app\school\user.ts" />
+    <TypeScriptCompile Include="app\school\users.component.ts" />
+    <TypeScriptCompile Include="app\services\cookieService.ts" />
+    <TypeScriptCompile Include="app\services\dataService.ts" />
+    <TypeScriptCompile Include="app\utils\bingMapHelper.ts" />
+    <TypeScriptCompile Include="app\utils\jsonHelper.ts" />
+    <TypeScriptCompile Include="app\services\meService.ts" />
+    <TypeScriptCompile Include="app\services\userPhotoService.ts" />
+    <TypeScriptCompile Include="app\services\userService.ts" />
+    <TypeScriptCompile Include="app\tabs\tab.ts" />
+    <TypeScriptCompile Include="app\tabs\tabs.ts" />
+    <TypeScriptCompile Include="app\utils\authorizationHelper.ts" />
+    <TypeScriptCompile Include="app\utils\compareHelper.ts" />
+    <TypeScriptCompile Include="app\utils\graphHelper.ts" />
+    <TypeScriptCompile Include="app\utils\convertHelper.ts" />
+    <TypeScriptCompile Include="auth\appAuth.ts" />
+    <TypeScriptCompile Include="constants.ts" />
+    <TypeScriptCompile Include="data\dbContext.ts" />
+    <TypeScriptCompile Include="routes\link.ts" />
+    <TypeScriptCompile Include="routes\me.ts" />
+    <TypeScriptCompile Include="routes\register.ts" />
+    <TypeScriptCompile Include="routes\schools.ts" />
+    <TypeScriptCompile Include="routes\tenant.ts" />
+    <TypeScriptCompile Include="routes\admin.ts" />
+    <TypeScriptCompile Include="routes\users.ts" />
+    <Content Include="app\aboutme\aboutme.component.template.html" />
+    <Content Include="app\aboutme\aboutme.service.ts" />
+    <Content Include="app\admin\consent.component.template.html" />
+    <Content Include="app\admin\admin.component.template.html" />
+    <Content Include="app\admin\linkedAccounts.component.template.html" />
+    <Content Include="app\app.component.css" />
+    <Content Include="app\app.component.template.html" />
+    <Content Include="app\css\bootstrap.min.css" />
+    <Content Include="app\css\Site.css" />
+    <Content Include="app\demoHelper\demoHelper-pages.json" />
+    <Content Include="app\demoHelper\demoHelper.component.template.html" />
+    <Content Include="app\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="app\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="app\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="app\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="app\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-Bd.eot" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-Bd.svg" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-Bd.ttf" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-Bd.woff" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-Bd.woff2" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-It.eot" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-It.svg" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-It.ttf" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-It.woff" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-It.woff2" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-Light.eot" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-Light.svg" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-Light.ttf" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-Light.woff" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-Light.woff2" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-Roman.eot" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-Roman.svg" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-Roman.ttf" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-Roman.woff" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-Roman.woff2" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-Th.eot" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-Th.svg" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-Th.ttf" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-Th.woff" />
+    <Content Include="app\fonts\HelveticaNeueLTStd-Th.woff2" />
+    <Content Include="app\header\header.component.template.html" />
+    <Content Include="app\images\arrow-all.png" />
+    <Content Include="app\images\arrow-down.png" />
+    <Content Include="app\images\arrow-up.png" />
+    <Content Include="app\images\btngreenbg.png" />
+    <Content Include="app\images\cancel.png" />
+    <Content Include="app\images\ClassDetailsTiles-bg.jpg" />
+    <Content Include="app\images\close.png" />
+    <Content Include="app\images\contaerbg.gif" />
+    <Content Include="app\images\conversation_icon.png" />
+    <Content Include="app\images\conversation_icon_hover.png" />
+    <Content Include="app\images\conversation_icon_selected.png" />
+    <Content Include="app\images\demo-helper-header-collapsed.png" />
+    <Content Include="app\images\demo-helper-header-expanded.png" />
+    <Content Include="app\images\document_icon.png" />
+    <Content Include="app\images\document_icon_hover.png" />
+    <Content Include="app\images\document_icon_selected.png" />
+    <Content Include="app\images\edit.png" />
+    <Content Include="app\images\global_pagination_first.png" />
+    <Content Include="app\images\global_pagination_last.png" />
+    <Content Include="app\images\global_pagination_next.png" />
+    <Content Include="app\images\global_pagination_previous.png" />
+    <Content Include="app\images\header-default.jpg" />
+    <Content Include="app\images\icon-map_30x28px-BLU.png" />
+    <Content Include="app\images\icon-map_30x28px-WHT.png" />
+    <Content Include="app\images\longin-bg.jpg" />
+    <Content Include="app\images\microsoft-icon.png" />
+    <Content Include="app\images\save.png" />
+    <Content Include="app\images\seat.png" />
+    <Content Include="app\images\SignInWithOffice365-Button.png" />
+    <Content Include="app\link\link.component.template.html" />
+    <Content Include="app\link\link.createLocal.component.template.html" />
+    <Content Include="app\link\link.loginLocal.component.template.html" />
+    <Content Include="app\link\link.loginO365Required.component.template.html" />
+    <Content Include="app\login\login.component.template.html" />
+    <Content Include="app\O365login\O365login.component.template.html" />
+    <Content Include="app\register\register.component.template.html" />
+    <Content Include="app\school\classdetail.component.template.html" />
+    <Content Include="app\school\classes.component.template.html" />
+    <Content Include="app\school\myclasses.component.template.html" />
+    <Content Include="app\school\school.component.template.html" />
+    <Content Include="app\school\users.component.template.html" />
+    <Content Include="app\tabs\tab.html" />
+    <Content Include="app\tabs\tabs.css" />
+    <Content Include="app\tabs\tabs.html" />
+    <None Include="edugraphapi2dev - Web Deploy.pubxml" />
+    <None Include="edugraphapi2dev - FTP.pubxml" />
+    <Content Include="deploy.cmd" />
+    <Content Include="Index.prod.html" />
+    <Content Include="Index.html" />
+    <Content Include="package.json" />
+    <Content Include="public\favicon.ico" />
+    <Content Include="README.md" />
+    <Content Include="ssl\cert.pem" />
+    <Content Include="ssl\csr.pem" />
+    <Content Include="ssl\key.pem" />
+    <Content Include="styles.css" />
+    <Content Include="tsconfig.json" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config" />
+    <Content Include="bin\ChangeConfig.ps1" />
+    <Content Include="bin\download.ps1" />
+    <Content Include="bin\setup_web.cmd" />
+    <Content Include="bin\node.cmd" />
+    <TypeScriptCompile Include="services\msGraphClient.ts" />
+    <TypeScriptCompile Include="services\tenantService.ts" />
+    <TypeScriptCompile Include="services\schoolService.ts" />
+    <TypeScriptCompile Include="services\tokenCacheService.ts" />
+    <TypeScriptCompile Include="services\userService.ts" />
+    <TypeScriptCompile Include="utils\authenticationHelper.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="app\" />
+    <Folder Include="app\admin\" />
+    <Folder Include="app\authHelper\" />
+    <Folder Include="app\css\" />
+    <Folder Include="app\demoHelper\" />
+    <Folder Include="app\fonts\" />
+    <Folder Include="app\header\" />
+    <Folder Include="app\images\" />
+    <Folder Include="app\login\" />
+    <Folder Include="app\link\" />
+    <Folder Include="app\aboutme\" />
+    <Folder Include="app\models\" />
+    <Folder Include="app\models\common\" />
+    <Folder Include="app\O365login\" />
+    <Folder Include="app\register\" />
+    <Folder Include="app\school\" />
+    <Folder Include="app\services\" />
+    <Folder Include="app\tabs\" />
+    <Folder Include="app\utils\" />
+    <Folder Include="bin\" />
+    <Folder Include="data\" />
+    <Folder Include="dist\" />
+    <Folder Include="auth\" />
+    <Folder Include="utils\" />
+    <Folder Include="services\" />
+    <Folder Include="public\" />
+    <Folder Include="routes\" />
+    <Folder Include="ssl\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="app\models\common\pagedCollection.ts" />
+    <Compile Include="app\utils\urlHelper.ts" />
+    <Compile Include="dist\bundle.js" />
+    <Compile Include="gulpfile.js" />
+    <Compile Include="systemjs.config.js" />
+    <Compile Include="utils\tokenUtils.ts" />
+  </ItemGroup>
+  <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
+  <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:48022/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost:1337</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

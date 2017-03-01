@@ -1,0 +1,29 @@
+﻿<!-- Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license. -->
+<!-- See LICENSE in the project root for license information --> 
+<div class="container ">
+    <h2>About Me</h2>
+    <div class="margin-top-12 margin-btm-12 aboutme">
+        <b>Username:</b><br> {{model.UserName}}
+        <img *ngIf="userPhoto"  src="{{userPhoto}}" >
+    </div>
+    <div class="margin-top-12 margin-btm-12" *ngIf="userRole">
+        <b>Logged in as:</b><br> {{userRole}}
+    </div>
+    <div class="margin-btm-12">
+        <b>Favorite Color:</b>
+        <div *ngIf="showFavorite" class="linkcontrol">
+            <select name="favoritecolor" [(ngModel)]="model.MyFavoriteColor">
+                <option *ngFor="let color of model.FavoriteColors" [value]="color.Value">{{color.DisplayName}}</option>
+            </select>
+            <input type="button" value="Save" (click)="updateFavoriteColor()">
+            <span class="saveresult" *ngIf="model.SaveSucceeded">Favorite color has been updated!</span>
+        </div>
+    </div>
+    <div class="margin-btm-12 ">
+        <b>Classes:</b>
+        <br>
+        <div *ngIf="model.Groups">
+            <div *ngFor="let group of model.Groups">{{group}}</div>
+        </div>
+    </div>
+</div>

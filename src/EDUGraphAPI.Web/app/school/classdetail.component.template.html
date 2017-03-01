@@ -1,0 +1,175 @@
+﻿<!-- Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license. -->
+<!-- See LICENSE in the project root for license information --> 
+<div class="row schools class-details">
+    <div class="tophero">
+        <div class="container">
+            <div class="col-md-6 secondnav" *ngIf="school">
+                <a href="/schools"> All Schools</a>
+                &gt;
+                <a (click)="gotoClasses(school);false">{{school.DisplayName}}</a>
+                &gt;<span *ngIf="classEntity"> {{classEntity.DisplayName}}</span>
+            </div>
+        </div>
+        <div class="container">
+            <div class="a-heading ">Class Details</div>
+            <div class="b-title" *ngIf="classEntity">{{classEntity.CourseNumber}} | {{classEntity.DisplayName}}</div>
+        </div>
+        <div class="container coursedetail" *ngIf="classEntity">
+            <div class="col-md-6">
+                <span>Course Name:</span> {{classEntity.CourseName}}
+                <br>
+                <span>Description:</span> {{classEntity.CourseDescription}}
+                <br>
+                <span>Period:</span> {{classEntity.Period}}
+                <br>
+                <span>Term Name:</span> {{classEntity.TermName}}
+                <br>
+                <span>Start/Finish Date:</span>
+                <span id="termdate">{{classEntity.TermStartDate}}</span>
+                <span id="termdate-separator"> - </span>
+                <span id="termdate">{{classEntity.TermEndDate}}</span>
+            </div>
+            <div class="col-md-6">
+                <div *ngFor="let user of classEntity.Teachers">
+                    <span>Teacher:</span> {{user.DisplayName}}
+                </div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+    <div class="students">
+        <div class="tab-content">
+            <tabs>
+
+                <tab [tabTitle]="'Students'">
+                    <div id="students">
+                        <table class="table  table-green table-student tablesorter" id="studentsTable">
+                            <thead>
+                                <tr class="table-green-header">
+                                    <th class="header headerSortDown" (click)="sortStu('name')">student name</th>
+                                    <th class="header" (click)="sortStu('grade')">grade</th>
+                                </tr>
+                            </thead>
+                            <tbody *ngIf="classEntity">
+                                <tr class="tr-content" *ngFor="let stu of classEntity.Students">
+                                    <td>
+                                        <img [src]="stu.Photo || 'app/images/header-default.jpg'"> {{stu.DisplayName}}
+                                    </td>
+                                    <td>{{stu.EducationGrade}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </tab>
+                <tab tabTitle="Class Documents">
+                    <div id="documents" class="tab-pane">
+                        <table id="studoc" class="table  table-green table-student tablesorter">
+                            <thead>
+                                <tr class="table-green-header" [hidden]="!documents || documents.length == 0">
+                                    <th class="border-holder header"></th>
+                                    <th class="space-holder left header"></th>
+                                    <th class="tdleft header headerSortDown" (click)="sortDoc('name')">document name</th>
+                                    <th class="tdleft header" (click)="sortDoc('modified')">modified</th>
+                                    <th class="tdleft header" (click)="sortDoc('modifiedby')">modified by</th>
+                                    <th class="space-holder right header"></th>
+                                </tr>
+                                <tr class="blanktr">
+                                    <th colspan="5" class="header"></th>
+                                </tr>
+                            </thead>
+                            <tbody *ngIf="!documents || documents.length == 0">
+                                <tr class="tr-content">
+                                    <td class="space-holder center" colspan="6"> There is no data available for this page at this time.</td>
+                                </tr>
+                            </tbody>
+                            <tbody *ngIf="documents">
+
+                                <tr class="tr-content" *ngFor="let doc of documents" (click)="setSelected($event)">
+                                    <td class="border-holder"></td>
+                                    <td class="space-holder left"></td>
+                                    <td>
+                                        <a target="_blank" href="{{doc.webUrl}}">{{doc.Name}}</a>
+                                    </td>
+                                    <td>{{doc.lastModifiedDateTime}}</td>
+                                    <td>{{doc.LastModifiedBy}}</td>
+                                    <td class="space-holder right"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <span class="see-more" *ngIf="oneDriveURL"><a href="{{oneDriveURL}}" target="_blank">See All</a></span>
+                        <br style="clear:both">
+                    </div>
+                </tab>
+                <tab tabTitle="Conversations">
+                    <div id="conversations" class="tab-pane ">
+                        <table id="stuconv" class="table  table-green table-student" *ngIf="classEntity">
+                            <tbody *ngIf="!conversations || conversations.length == 0">
+                                <tr class="tr-content">
+                                    <td class="space-holder center" colspan="4"> There is no data available for this page at this time.</td>
+                                </tr>
+                            </tbody>
+                            <tbody *ngIf="conversations">
+                                <tr class="tr-content" *ngFor="let conversation of conversations" (click)="setSelected($event)">
+                                    <td class="border-holder"></td>
+                                    <td class="space-holder left"></td>
+                                    <td>
+                                        <a target="_blank" href="https://outlook.office.com/owa/?path=/group/{{classEntity.Email}}/mail&amp;exsvurl=1&amp;ispopout=0&amp;ConvID={{conversation.id}}">{{conversation.topic}}</a>
+                                    </td>
+                                    <td class="space-holder right"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <span class="see-more" *ngIf="classEntity"><a target="_blank" href="https://outlook.office.com/owa/?path=/group/{{classEntity.Email}}/mail&amp;exsvurl=1&amp;ispopout=0">See All</a></span>
+                        <br style="clear:both">
+                    </div>
+                </tab>
+                <tab tabTitle="SEATING CHART">
+                    <div id="seatingchart" class="tab-pane ">
+                        <div class="left" id="dvleft">
+                            <div *ngIf="me">
+                                <div class="tip" *ngIf="me.ObjectType=='Teacher'"> To assign seats for each student, drag and drop student profile icons below onto the seating map to the right.</div>
+                                <div class="tip" *ngIf="me.ObjectType=='Student'">
+                                    <div class="assignseat tip"><div class="greenicon" style=""></div>Your assigned seat </div>
+                                </div>
+                            </div>
+                            <ul id="lstproducts" *ngIf="classEntity">
+                                <li *ngFor="let stu of classEntity.Students" id="{{stu.O365UserId}}">
+                                    <img [src]="stu.Photo || 'app/images/header-default.jpg'"> <span class="disname"> {{stu.DisplayName}} </span> <span class="{{stu.SeatingClass}}">seated ✓</span>
+                                </li>
+                            </ul>
+                            <div id="hidtiles" class="hideitem" *ngIf="classEntity">
+                                <div *ngFor="let stu of classEntity.Students" [position]="stu.SeatingArrangment" [userid]="stu.O365UserId" [class]="stu.ContainerClass" [style.background-color]="stu.FavoriteColor">
+                                    <div class="deskclose" [hidden]="!isEditing"><img src="/app/Images/close.png"></div>
+                                    <div class="deskicon">
+                                        <img [src]="stu.Photo || 'app/images/header-default.jpg'" />
+                                    </div>
+                                    <div class="stuname">{{stu.DisplayName}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="right" id="dvright">
+
+                            <div class="teacherdesk">Teacher's desk</div>
+                            <div *ngIf="classEntity">
+                                <div id="graybg">
+                                    <div class="desktile" *ngFor="let num of seatingsCount" [position]="num">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="dvedit" class="dvedit" *ngIf="me">
+                            <div *ngIf="me.ObjectType=='Teacher'">
+                                <img id="imgedit" src="/app/Images/edit.png" [hidden]="isEditing" (click)="editseats()">
+                                <img id="imgsave" src="/app/Images/save.png" [hidden]="!isEditing" (click)="saveeditseats()">
+                                <img id="imgcancel" src="/app/Images/cancel.png" [hidden]="!isEditing" (click)="canceleditseats()">
+                            </div>
+                        </div>
+                        <br style="clear:both">
+                    </div>
+                </tab>
+
+            </tabs>
+        </div>
+    </div>
+    <br style="clear:both;" />
+</div>

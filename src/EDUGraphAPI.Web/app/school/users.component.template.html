@@ -1,0 +1,87 @@
+﻿<!-- Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license. -->
+<!-- See LICENSE in the project root for license information --> 
+<div class="row schools teacher-student">
+    <div class="tophero" *ngIf="school">
+        <div class="col-md-8">
+            <div class="secondnav">
+                <a href="/schools">All Schools</a> &gt; {{school.DisplayName}}
+            </div>
+            <div class="a-heading">Teachers &amp; Students</div>
+        </div>
+        <div class="toptiles">
+            <div class="section-school-name">{{school.DisplayName}}</div>
+            <div class="infocontainer">
+                <div class="infoheader">PRINCIPAL</div>
+                <div class="infobody" title="Amy Roebuck">{{school.PrincipalName}}<span *ngIf="!school.PrincipalName">-</span>
+                </div>
+            </div>
+            <div class="infocontainer">
+                <div class="infoheader">Grade levels</div>
+                <div class="infobody" title="9 - 12">{{school.LowestGrade}} - {{school.HighestGrade}}</div>
+            </div>
+        </div>
+        <div>
+            <div class="col-md-6 usericon">
+                <div class="stuicon"></div><div>Student</div>
+                <div class="teacicon"></div><div>Teacher</div>
+            </div>
+            <div class="col-md-6 filterlink-container">
+                <span>FILTER:</span> <a id="filterteacher" class="filterlink" [class.selected]="view === 'teachers'" (click)="switchView('teachers')"> Teachers</a> | <a id="filterstudnet" class="filterlink" [class.selected]="view === 'students'" (click)="switchView('students')">Students</a> | <a id="filterall" class="filterlink" [class.selected]="view === 'users'" (click)="switchView('users')">All</a>
+            </div>
+        </div>
+        <br style="clear:both;">
+    </div>
+    <div class="users-container tiles-root-container">
+        <div id="users" class="tiles-secondary-container" [hidden]="view !== 'users'">
+            <div *ngIf="usersModel.showNoData" class="nodata"> There is no data available for this page at this time.</div>
+            <div *ngIf="!usersModel.showNoData">
+                <div class="content">
+                    <div class="element" *ngFor="let user of usersModel.users; let i = index" [hidden]="i < (usersModel.curPage - 1) * 12 || i >= usersModel.curPage * 12" [ngClass]="user.ObjectType === 'Teacher' ? 'teacher-bg' : 'student-bg'">
+                        <div class="userimg">
+                            <img [src]="user.Photo || 'app/images/header-default.jpg'" />
+                        </div>
+                        <div class="username">{{user.DisplayName}}</div>
+                    </div>
+                </div>
+                <div *ngIf="usersModel.nextLink || usersModel.users.length > 12" class="pagination">
+                    <span class="prev" [ngClass]="{'current' : usersModel.curPage === 1, 'disabled': usersModel.isGettingData}" (click)="changePage('users', usersModel, false)">Previous</span>
+                    <span class="next" [ngClass]="{'current' : !usersModel.nextLink && usersModel.curPage *12 >= usersModel.users.length, 'disabled': usersModel.isGettingData}" (click)="changePage('users', usersModel, true)">Next</span>
+                </div>
+            </div>
+        </div>
+        <div id="students" class="tiles-secondary-container" [hidden]="view !== 'students'">
+            <div *ngIf="studentsModel.showNoData" class="nodata"> There is no data available for this page at this time.</div>
+            <div *ngIf="!studentsModel.showNoData">
+                <div class="content">
+                    <div class="element" *ngFor="let user of studentsModel.users; let i = index" [hidden]="i < (studentsModel.curPage - 1) * 12 || i >= studentsModel.curPage * 12" [ngClass]="user.ObjectType === 'Teacher' ? 'teacher-bg' : 'student-bg'">
+                        <div class="userimg">
+                            <img [src]="user.Photo || 'app/images/header-default.jpg'" />
+                        </div>
+                        <div class="username">{{user.DisplayName}}</div>
+                    </div>
+                </div>
+                <div *ngIf="studentsModel.nextLink || studentsModel.users.length > 12" class="pagination">
+                    <span class="prev" [ngClass]="{'current' : studentsModel.curPage === 1, 'disabled': studentsModel.isGettingData}" (click)="changePage('students', studentsModel, false)">Previous</span>
+                    <span class="next" [ngClass]="{'current' : !studentsModel.nextLink && studentsModel.curPage *12 >= studentsModel.users.length, 'disabled': studentsModel.isGettingData}" (click)="changePage('students', studentsModel, true)">Next</span>
+                </div>
+            </div>
+        </div>
+        <div id="teachers" class="tiles-secondary-container" [hidden]="view !== 'teachers'">
+            <div *ngIf="teachersModel.showNoData" class="nodata"> There is no data available for this page at this time.</div>
+            <div *ngIf="!teachersModel.showNoData">
+                <div class="content">
+                    <div class="element" *ngFor="let user of teachersModel.users; let i = index" [hidden]="i < (teachersModel.curPage - 1) * 12 || i >= teachersModel.curPage * 12" [ngClass]="user.ObjectType === 'Teacher' ? 'teacher-bg' : 'student-bg'">
+                        <div class="userimg">
+                            <img [src]="user.Photo || 'app/images/header-default.jpg'" />
+                        </div>
+                        <div class="username">{{user.DisplayName}}</div>
+                    </div>
+                </div>
+                <div *ngIf="teachersModel.nextLink || teachersModel.users.length > 12" class="pagination">
+                    <span class="prev" [ngClass]="{'current' : teachersModel.curPage === 1, 'disabled': teachersModel.isGettingData}" (click)="changePage('teachers', teachersModel, false)">Previous</span>
+                    <span class="next" [ngClass]="{'current' : !teachersModel.nextLink && teachersModel.curPage *12 >= teachersModel.users.length, 'disabled': teachersModel.isGettingData}" (click)="changePage('teachers', teachersModel, true)">Next</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

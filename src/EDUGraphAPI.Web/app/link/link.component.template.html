@@ -1,0 +1,39 @@
+﻿<!-- Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license. -->
+<!-- See LICENSE in the project root for license information --> 
+<div *ngIf="error" class="message-container bg-danger">
+    <p>{{error}}</p>
+</div>
+<div class="link-component">
+    <h2>Link Office 365 & Local Account</h2>
+    <div *ngIf="areAccountsLinked==false">
+        <p>This page will enable you to link your Office 365 & Local Account together to successfully use the demo application.</p>
+        <div class="form-horizontal" id="linkAccountPrompt" *ngIf="isLocalAccount">
+            <hr />
+            <p>
+                <input type="submit" value="Link to existing O365 account" class="btn btn-primary" (click)="loginO365(this)" />
+            </p>
+        </div>
+        <div *ngIf="isLocalAccount==false">
+            <hr />
+            <div class="form-horizontal">
+                <p *ngIf="localAccountExisted">{{localAccountExistedMessage}}</p>
+                <p>
+                    <input type="button" [disabled]="localAccountExisted" value="Continue with new Local Account" class="btn btn-primary" (click)="createLocalAccount(this)" />
+                    &nbsp;&nbsp;
+                    <a *ngIf="localAccountExisted" class="btn btn-primary" (click)="linkExistingLocalAccount()">Link with existing Local Account</a>
+                    <a *ngIf="!localAccountExisted" class="btn btn-primary" href="/link/login-local">Link with existing Local Account</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="areAccountsLinked">
+        <p>Your local account and Office 365 account are now linked.</p>
+        <ul>
+            <li>Local account: {{userInfo.email}}</li>
+            <li>Office 365 account: {{userInfo.o365Email}}</li>
+        </ul>
+        <p>
+            <a class="btn btn-primary" href="/schools">Return to home</a>
+        </p>
+    </div>
+</div>

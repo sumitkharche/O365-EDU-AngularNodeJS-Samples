@@ -1,0 +1,59 @@
+﻿<!-- Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license. -->
+<!-- See LICENSE in the project root for license information --> 
+<div class="loginbody">
+    <div class="row">
+        <div class="col-md-5">
+            <section id="loginForm">
+                <form #form="ngForm" class="form-horizontal ng-untouched ng-pristine ng-valid">
+                    <div class="validation-summary-valid text-danger">
+                        <ul>
+                            <li [hidden]="!email.errors?.email || (email.pristine && !form.submitted)">The Email field is not a valid e-mail address.</li>
+                            <li [hidden]="!email.errors?.required || (email.pristine && !form.submitted)">The Email field is required.</li>
+                            <li [hidden]="!password.errors?.minlength || (password.pristine && !form.submitted)">The Password must be at least 6 characters long.</li>
+                            <li [hidden]="!password.errors?.maxlength || (password.pristine && !form.submitted)">The Password must be at most 100 characters long.</li>
+                            <li [hidden]="!password.errors?.required || (password.pristine && !form.submitted)">The Password field is required.</li>
+                            <li [hidden]="!showLoginFailed">Your account or password is incorrect.  </li>
+                        </ul>
+                    </div>
+                    <h4 class="margin-btm-20">Use your local account to log in.</h4>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input [(ngModel)]="model.email" #email="ngModel" class="form-control logincontrol" id="Email" name="Email" placeholder="Email" email required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input [(ngModel)]="model.password" #password="ngModel" class="form-control logincontrol" id="Password" name="Password" placeholder="password" type="password" minlength="6" maxlength="100" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="margin-left-20 col-md-10">
+                            <div class="checkbox">
+                                <input data-val="true" data-val-required="The Remember me? field is required." id="RememberMe" name="RememberMe" type="checkbox" [(ngModel)]="model.remember"><input name="RememberMe" type="hidden" value="false">
+                                <label for="RememberMe">Remember me?</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-10">
+                            <input type="button" class="btn btn-default btn-local-login" value="Sign in" [disabled]="!form.valid || form.pristine" (click)="localLogin()">
+                        </div>
+                    </div>
+                </form>
+                <p>
+                    <a href="javascript:void(0)" (click)="gotoRegister()">Register as a new user</a>
+                </p>
+            </section>
+        </div>
+        <div class="col-md-5">
+            <section id="socialLoginForm">
+                <h4 class="margin-btm-20">Use your school account</h4>
+                <div id="socialLoginList">
+                    <p>
+                        <button type="submit" class="btn btn-default btn-ms-login" id="OpenIdConnect" name="provider" value="OpenIdConnect" title="Log in using your Microsoft Work or school account" (click)="login()"></button>
+                    </p>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

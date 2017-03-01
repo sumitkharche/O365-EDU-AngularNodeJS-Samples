@@ -1,0 +1,88 @@
+﻿<!-- Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license. -->
+<!-- See LICENSE in the project root for license information --> 
+<div class="row schools sections">
+    <div class="tophero" *ngIf="school">
+        <div class="col-md-8">
+            <div class="secondnav">
+                <a href="/schools"> All Schools</a> &gt; {{school.DisplayName}}
+            </div>
+            <div class="a-heading">Classes</div>
+        </div>
+        <div class="toptiles">
+            <div class="section-school-name">{{school.DisplayName}}</div>
+            <div class="infocontainer">
+                <div class="infoheader">PRINCIPAL</div>
+                <div class="infobody" title="Amy Roebuck">
+                    <span *ngIf="!school.PrincipalName">-</span>
+                    <span>{{school.PrincipalName}}</span>
+                </div>
+            </div>
+            <div class="infocontainer">
+                <div class="infoheader">Grade levels</div>
+                <div class="infobody">{{school.LowestGrade}} - {{school.HighestGrade}}</div>
+            </div>
+        </div>
+        <div>
+            <div class="col-md-6 usericon">
+                <div class="icon"></div>
+                <div *ngIf="legendText">
+                {{legendText}}
+                </div>
+                <div class="icon my-class"></div>
+                <div>My Class</div>
+            </div>
+            <div class="col-md-6 filterlink-container">
+                <span>FILTER:</span>
+                <a id="filtermyclasses" class="filterlink selected" data-type="myclasses">My Classes</a>
+                <span> | </span>
+                <a (click)="gotoAllClasses();false" id="filterclasses" class="filterlink " data-type="allclasses">All Classes</a>
+            </div>
+        </div>
+        <br style="clear:both;" />
+    </div>
+    <div class="allclasses-container tiles-root-container">
+        <div id="allclasses" class="tiles-secondary-container">
+            <div class="section-tiles">
+                <div class="nodata" *ngIf="showNoData"> {{noDataText}}</div>
+                <div class="content clearfix" *ngIf="classesArray">
+                    <div class="tile-container" *ngFor="let classEntity of classesArray" on-mouseover='showDetail(classEntity)' on-mouseout=" hideDetail(classEntity)">
+                        <a class="mysectionlink" (click)="gotoDetail(classEntity.ObjectId);false">
+                            <div class="tile">
+                                <h5>{{classEntity.DisplayName}}</h5>
+                                <h2>{{classEntity.CombinedCourseNumber}}</h2>
+                            </div>
+                        </a>
+                        <div class="tile" *ngIf="!classEntity.IsMyClasses">
+                            <h5>{{classEntity.DisplayName}}</h5>
+                            <h2>{{classEntity.CombinedCourseNumber}}</h2>
+                        </div>
+                        <div class="detail" [hidden]="!classEntity.UIHoverShowDetail">
+                            <h5>Course Id:</h5>
+                            <h6>{{classEntity.CourseId}}</h6>
+                            <h5>Description:</h5>
+                            <h6>{{classEntity.CourseDescription}}</h6>
+                            <h5>Teachers:</h5>
+                            <h6>
+                                <span *ngFor="let user of classEntity.Users">
+                                    <span *ngIf="user.ObjectType=='Teacher'">
+                                        {{user.DisplayName}}
+                                    </span>
+                                </span>
+                            </h6>
+                            <h5>Term Name:</h5>
+                            <h6>{{classEntity.TermName}}</h6>
+                            <h5>Start/Finish Date:</h5>
+                            <h6>
+                                <span id="termdate">{{classEntity.TermStartDate}}</span>
+                                <span> - </span>
+                                <span id="termdate">{{classEntity.TermEndDate}}</span>
+                            </h6>
+                            <h5>Period:</h5>
+                            <h6>{{classEntity.Period}}</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
