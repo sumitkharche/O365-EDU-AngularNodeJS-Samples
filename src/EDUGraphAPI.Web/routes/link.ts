@@ -7,7 +7,6 @@ import jwt = require('jsonwebtoken');
 import { UserService } from '../services/userService';
 import { Constants } from '../constants';
 import { TokenCacheService } from '../services/TokenCacheService';
-import { TokenUtils } from '../utils/tokenUtils'
 import { AuthenticationHelper } from '../utils/authenticationHelper'
 
 var router = express.Router();

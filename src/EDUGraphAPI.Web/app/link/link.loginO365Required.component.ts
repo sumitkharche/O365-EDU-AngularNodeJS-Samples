@@ -11,8 +11,8 @@ import { ColorEntity } from '../models/common/colorEntity';
 import { Constants } from '../constants';
 import { MeService } from "../services/meService";
 import { UserService } from "../services/userService";
-import { AuthorizationHelper } from '../utils/AuthorizationHelper';
 import { UrlHelper } from '../utils/urlHelper';
+import { Cookie } from '../services/cookieService';
 
 @Component({
     moduleId: module.id,
@@ -45,19 +45,9 @@ export class LinkLoginO365Required implements OnInit {
     }
 
     reLoginO365() {
-        console.log('ReLoginO365');
-        // this.router.navigate(["login"]);
-        var redirectUrl = `${window.location.protocol}//${window.location.host}/api/me/O365UserLogin`;
-        var url = AuthorizationHelper.getUrl(
-            'code+id_token',
-            redirectUrl,
-            AuthorizationHelper.generateNonce(),
-            Constants.MSGraphResource,
-            'login',
-            AuthorizationHelper.generateNonce(),
-            'form_post'
-        );
-        window.location.href = url;
+        var userName = this.userInfo.firstName + ' ' + this.userInfo.lastName;
+        Cookie.SetCookiesForO365Users(userName, this.userInfo.o365Email);
+        window.location.href = '/o365Login';
     }
 
     initMessage() {

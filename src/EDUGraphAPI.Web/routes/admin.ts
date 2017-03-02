@@ -7,7 +7,7 @@ import { TenantService } from '../services/tenantService';
 import { MSGraphClient } from '../services/msGraphClient';
 import { Constants } from '../constants';
 import { OrganizationInstance } from '../data/dbContext';
-import { TokenUtils } from '../utils/tokenUtils';
+import { AuthenticationHelper } from '../utils/authenticationHelper';
 import jwt = require('jsonwebtoken');
 
 var router = express.Router();
@@ -70,9 +70,9 @@ router.post('/consented', function (req, res, next) {
         .then(tenant => {
             if (tenant == null) {
                 var code = req.body.code;
-                TokenUtils.getTokenByCode(code, tenantId, Constants.MSGraphResource, 'api/admin/consented')
+                AuthenticationHelper.getAccessTokenByCode(idToken.oid, code, Constants.MSGraphResource, 'api/admin/consented')
                     .then(result => {
-                        var msGraphClient = new MSGraphClient(result.access_token);
+                        var msGraphClient = new MSGraphClient(result.accessToken);
                         msGraphClient.getOrganization(tenantId)
                             .then(organization => {
                                 tenantService.createTenant(tenantId, organization.displayName, true)

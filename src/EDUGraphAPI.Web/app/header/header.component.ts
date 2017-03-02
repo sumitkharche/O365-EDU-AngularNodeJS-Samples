@@ -30,7 +30,7 @@ export class Header implements OnInit {
     userRole: string = "";
     me: UserModel;
     userPhoto: string = "";
-
+    showO365UserInfo: boolean = true;
 
     constructor(
         private router: Router,
@@ -42,7 +42,13 @@ export class Header implements OnInit {
 
     ngOnInit() {
         this.ifShowContextMenu = false;
+        this.router.events.subscribe((url: any) => {
+            if (url.url.toLowerCase() == "/link/login-o365-required") {
+                this.showO365UserInfo = false;
+            }
+        });
         this.initFullName();
+
     }
 
     urlParts() {
@@ -116,19 +122,21 @@ export class Header implements OnInit {
                         ? (user.firstName + " " + user.lastName)
                         : user.email
                     this.isAdmin = this.isUserAdmin(user);
-                    if (user.o365UserId) {
+                    if (user.o365UserId && this.showO365UserInfo) {
                         this.userPhotoService.getUserPhotoUrl(user.o365UserId)
                             .then(url => this.userPhoto = url);
                     }
                     if (this.isAdmin)
                         this.userRole = "Admin";
                     else {
-                        this.schoolService
-                            .getMe()
-                            .subscribe((result) => {
-                                this.me = MapUtils.deserialize(UserModel, result);
-                                this.userRole = this.me.ObjectType;
-                            });
+                        if (this.showO365UserInfo) {
+                            this.schoolService
+                                .getMe()
+                                .subscribe((result) => {
+                                    this.me = MapUtils.deserialize(UserModel, result);
+                                    this.userRole = this.me.ObjectType;
+                                });
+                        }
                     }
                 });
         }

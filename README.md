@@ -216,7 +216,7 @@ Debug the **EDUGraphAPI.Web**:
 
    - **Client Secret**: use the Key value of the app registration you created earlier.
 
-   - **Bing Map Key**: use the key of Bing Map you got earlier. This setting is optional.
+   - **Bing Map Key**: use the key of Bing Map you got earlier. This setting is optional. It will hide Bing map icon on schools page if this field is empty.
 
    - Check **I agree to the terms and conditions stated above**.
 

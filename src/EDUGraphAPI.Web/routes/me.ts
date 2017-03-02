@@ -3,12 +3,8 @@
 * See LICENSE in the project root for license information.
 */
 import express = require('express');
-import jwt = require('jsonwebtoken');
-import { Constants } from '../constants';
 import { UserService } from '../services/userService';
-import { TokenCacheService } from '../services/tokenCacheService';
 import { AuthenticationHelper } from '../utils/authenticationHelper'
-import { TokenUtils } from '../utils/tokenUtils'
 
 var router = express.Router();
 var userService = new UserService();
@@ -77,36 +73,5 @@ router.get('/accessToken', function (req, res) {
         .then(accessToken => res.json(accessToken))
         .catch(error => res.json(500, { error: error }));
 });
-
-router.post('/O365UserLogin', function (req, res) {
-    var redirectUrl = req.query.redirectUrl || '/schools';
-    var idToken = jwt.decode(req.body.id_token);
-    var tentantId = idToken.tid;
-    var code = req.body.code;
-
-    let accessToken: string;
-    let tokenService = new TokenCacheService();
-    var localUser = req.user;
-    localUser.oid = idToken.oid;
-    localUser.tid = tentantId;
-
-    AuthenticationHelper.getAccessTokenByCode(req.user.oid, code, Constants.MSGraphResource, 'api/me/O365UserLogin')
-        .then(tokenObject => {
-            res.redirect(redirectUrl);
-        })
-        .catch(error => {
-            let errorMsg: String = '';
-            if (typeof error == 'string' || error instanceof String) {
-                errorMsg = error;
-            }
-            else if (error != null && error.hasOwnProperty('message')) {
-                errorMsg = error.message
-            }
-            else {
-                errorMsg = 'unknown error'
-            }
-            res.redirect('/link/login-o365-required?error=' + encodeURI(errorMsg as string));
-        });
-})
 
 export = router;

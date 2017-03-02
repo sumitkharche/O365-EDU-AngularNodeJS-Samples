@@ -32,6 +32,7 @@ export class SchoolComponent implements OnInit {
     areAccountsLinked: boolean;
     isLocalAccount: boolean;
     showNoData: boolean = false;
+    showBingMapIcon: boolean = false;
 
     constructor(
         private router: Router,
@@ -78,6 +79,9 @@ export class SchoolComponent implements OnInit {
                     });
             });
         this.initLocalAndLinkedState();
+        if (Constants.BING_MAP_KEY) {
+            this.showBingMapIcon = true;
+        }
     }
 
     initLocalAndLinkedState() {

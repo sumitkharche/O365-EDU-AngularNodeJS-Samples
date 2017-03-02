@@ -4,7 +4,6 @@
 */
 import { DbContext, TokenCacheInstance } from '../data/dbContext';
 import * as Promise from "bluebird";
-import { TokenUtils } from '../utils/tokenUtils'
 import { Constants } from '../constants';
 
 export class TokenCacheService {
