@@ -3,7 +3,7 @@
 * See LICENSE in the project root for license information.
 */
 export class UrlHelper {
-    
+
     public static getHashValue(key): string {
         var matches = window.location.hash.match(new RegExp(key + '=([^&]*)'));
         var value = matches ? matches[1] : null;

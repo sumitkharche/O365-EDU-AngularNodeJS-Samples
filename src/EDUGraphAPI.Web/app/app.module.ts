@@ -8,7 +8,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { HttpModule } from '@angular/http';
 import { CustomFormsModule } from 'ng2-validation'
-
 import { AppComponent } from './app.component';
 import { Login } from './login/login.component';
 import { O365login } from './O365login/O365login.component';

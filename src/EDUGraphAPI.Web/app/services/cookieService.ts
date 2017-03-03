@@ -6,6 +6,7 @@
  * Class Cookie - Holds static functions to deal with Cookies
  */
 import { Constants } from '../constants';
+
 export class Cookie {
 
 	/**
@@ -73,7 +74,7 @@ export class Cookie {
 
         if (expires) {
             if (typeof expires === 'number') {
-                let dtExpires = new Date(new Date().getTime() + expires);
+                let dtExpires = new Date(new Date().getTime() + expires * 60 * 1000);
                 cookieStr += 'expires=' + dtExpires.toUTCString() + ';';
             } else {
                 cookieStr += 'expires=' + expires.toUTCString() + ';';
@@ -116,15 +117,15 @@ export class Cookie {
         for (let cookieName in cookies) {
             Cookie.delete(cookieName, path, domain);
         }
-
     }
 
     public static SetCookiesForO365Users(username: string, email: string) {
-        this.set(Constants.UsernameCookie, username);
-        this.set(Constants.EmailCookie, email);
+        this.set(Constants.O365Username, username, 60 * 24 * 30, '/');
+        this.set(Constants.O365Email, email, 60 * 24 * 30, '/');
     }
+
     public static RemoveAllO365UsersCookies() {
-        this.delete(Constants.UsernameCookie);
-        this.delete(Constants.EmailCookie);
+        this.delete(Constants.O365Username);
+        this.delete(Constants.O365Email);
     }
 }

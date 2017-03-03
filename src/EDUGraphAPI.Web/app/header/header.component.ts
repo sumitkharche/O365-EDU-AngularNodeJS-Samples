@@ -78,7 +78,7 @@ export class Header implements OnInit {
             return urlParts[3];
         return '';
     }
-    
+
     isClassesPage() {
         let urlParts = this.urlParts();
         return urlParts.length > 0 && (urlParts[0].toLowerCase() == "classes" || urlParts[0].toLowerCase() == "classdetail");
@@ -101,7 +101,7 @@ export class Header implements OnInit {
     ifShowClassesTeacherStudents() {
         return this.isClassesPage() || this.isTeacherStudentsPage() || this.isMyClassesPage();
     }
-    
+
     showContextMenu() {
         let isLogin = false;
         let urlParts = this.urlParts();
@@ -158,8 +158,8 @@ export class Header implements OnInit {
 
     doLogOff(): void {
         console.log('logOff');
-        Cookie.delete(Constants.COOKIE_TOKEN);
-        Cookie.delete(Constants.MS_COOKIE_TOKEN);
+        Cookie.delete(Constants.AADGraphAccessToken);
+        Cookie.delete(Constants.MSGraphAccessToken);
         window.location.href = '/logout';
     }
 }

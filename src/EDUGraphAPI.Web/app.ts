@@ -2,6 +2,8 @@
 * Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 * See LICENSE in the project root for license information.
 */
+import { appAuth } from './auth/appAuth';
+
 var http = require("http");
 var https = require("https");
 var cookieSession = require('cookie-session');
@@ -11,7 +13,6 @@ var favicon = require("serve-favicon");
 var logger = require("morgan");
 var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
-import { appAuth } from './auth/appAuth';
 
 var fs = require("fs");
 var url = require("url");
@@ -22,7 +23,7 @@ var registerRoute = require("./routes/register");
 var schoolsRoute = require("./routes/schools");
 var linkRoute = require("./routes/link");
 var tenantRoute = require("./routes/tenant");
-var adminRoute = require("./routes/admin"); 
+var adminRoute = require("./routes/admin");
 
 var app = express();
 
@@ -41,13 +42,9 @@ app.get("/systemjs.config.js", function (req, res) {
     res.sendfile(path.join(__dirname, 'systemjs.config.js'));
 });
 
-
 //-----------------------------------------------------------------------------
 // Config the app, include middlewares
 //-----------------------------------------------------------------------------
-
-
-// uncomment after placing your favicon in /public
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(cookieSession({
@@ -64,6 +61,7 @@ app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 auth.initPassport(app);
 
 app.use(express.static(path.join(__dirname, 'public')));
+
 // APIs
 app.use('/api/me', auth.ensureAuthenticated, meRoute);
 app.use('/api/users', auth.ensureAuthenticated, usersRoute);
@@ -99,6 +97,7 @@ app.use(function (req, res, next) {
     err['status'] = 404;
     next(err);
 });
+
 // error handlers
 // development error handler
 // will print stacktrace
@@ -111,6 +110,7 @@ if (app.get('env') === 'development') {
         });
     });
 }
+
 // production error handler
 // no stacktraces leaked to user
 app.use(function (err, req, res, next) {
@@ -120,10 +120,12 @@ app.use(function (err, req, res, next) {
         error: {}
     });
 });
+
 // database
 var db = new dbContext_1.DbContext();
 db.sync({ force: false }).then(function () { });
-//
+
+// create server
 var port = process.env.port || 1337;
 if (app.get('env') === 'development') {
     https.createServer({
@@ -136,4 +138,3 @@ else {
         console.log('Express server listening on port ' + port);
     });
 }
-//# sourceMappingURL=app - Copy.js.map

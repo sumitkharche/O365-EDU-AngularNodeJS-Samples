@@ -40,7 +40,7 @@ export class MeService {
     }
 
     public isLocalAccount() {
-        let authType = Cookie.get(Constants.LOGIN_TOKEN);
+        let authType = Cookie.get(Constants.AuthType);
         if (authType == null || authType == undefined)
             return true;
         return authType.toLowerCase() == "local";

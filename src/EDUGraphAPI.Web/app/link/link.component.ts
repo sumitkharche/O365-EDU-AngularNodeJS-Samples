@@ -66,15 +66,14 @@ export class Link implements OnInit {
     }
 
     createLocalAccount() {
-        console.log('createLocalAccount');
         this.router.navigate(['link/create-local']);
     }
 
     linkExistingLocalAccount() {
         this.linkService.linkMatchingLocalUser()
             .subscribe(
-                (result) => this.router.navigate(["schools"]),
-                (err) => this.error = err.json().error);
+            (result) => this.router.navigate(["schools"]),
+            (err) => this.error = err.json().error);
     }
 
     initMessage() {

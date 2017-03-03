@@ -78,7 +78,7 @@ router.post('/consented', function (req, res, next) {
                                 tenantService.createTenant(tenantId, organization.displayName, true)
                                     .then(() => res.redirect(redirectUrl));
                             });
-                    });                
+                    });
             }
             else if (tenant.isAdminConsented == false) {
                 tenantService.updateTenant(tenantId, true)

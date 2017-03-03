@@ -18,7 +18,6 @@ export class Item {
     public displayName: string;
 }
 
-
 @Injectable()
 export class DataService {
 
@@ -39,7 +38,7 @@ export class DataService {
     }
 
     public get(actionUrl: string) {
-        let activeProject: ReplaySubject<any> = new ReplaySubject(1); 
+        let activeProject: ReplaySubject<any> = new ReplaySubject(1);
         this.authService.getGraphToken(actionUrl)
             .subscribe(accessToken => {
                 this._http.get(actionUrl, { headers: this.getHeader(accessToken) })

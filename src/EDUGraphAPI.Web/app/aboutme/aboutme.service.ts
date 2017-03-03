@@ -4,7 +4,6 @@
 */
 import { Injectable, Inject } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
-
 import { Constants } from '../constants';
 import { AboutMeModel } from './aboutme';
 import { ClassesModel } from '../school/classes';

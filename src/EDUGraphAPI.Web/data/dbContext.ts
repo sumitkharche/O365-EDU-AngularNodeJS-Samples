@@ -47,7 +47,7 @@ export interface UserRoleAttributes {
 }
 export interface UserRoleInstance extends Sequelize.Instance<UserRoleAttributes>, UserRoleAttributes {
 }
-export interface UserRoleModel extends Sequelize.Model<UserRoleInstance, UserRoleAttributes > { }
+export interface UserRoleModel extends Sequelize.Model<UserRoleInstance, UserRoleAttributes> { }
 
 
 export interface ClassroomSeatingArrangementAttributes {

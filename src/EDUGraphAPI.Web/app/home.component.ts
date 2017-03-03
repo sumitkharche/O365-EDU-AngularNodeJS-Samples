@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit {
                 });
         }
         else {
-            var username = Cookie.get(Constants.UsernameCookie);
+            var username = Cookie.get(Constants.O365Username);
             if (username) {
                 this.router.navigate(['O365login']);
             }

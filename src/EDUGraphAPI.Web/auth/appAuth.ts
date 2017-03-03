@@ -8,6 +8,7 @@ import https = require('https');
 import { TokenCacheService } from '../services/tokenCacheService';
 import { Constants } from '../constants';
 import { UserService } from '../services/userService';
+
 var tokenCache = new TokenCacheService();
 
 export class appAuth {
@@ -39,9 +40,9 @@ export class appAuth {
             done(null, user);
         });
 
-        passport.use('azuread-openidconnect', this.constructOIDCStrategy());
+        passport.use('O365', this.constructOIDCStrategy());
 
-        passport.use('localStrategy', this.constructLocalStrategy());
+        passport.use('Local', this.constructLocalStrategy());
     }
 
     //-----------------------------------------------------------------------------
@@ -93,9 +94,6 @@ export class appAuth {
             }).then(item => {
                 done(null, profile);
             });
-            //process.nextTick(function () {
-            //    return done(null, profile);
-            //});
         });
     }
 
@@ -159,9 +157,20 @@ export class appAuth {
     // it will call `passport.authenticate` to ask for user to log in.
     //-----------------------------------------------------------------------------
     public initAuthRoute(app: any) {
-        app.get('/o365login', function (req, res, next) {
-            var email = req.cookies[Constants.EmailCookie];
-            passport.authenticate('azuread-openidconnect', {
+
+        app.post('/auth/login/local', passport.authenticate('Local'),
+            function (req, res) {
+                if (req.body.remember) {
+                    res.cookie('authType', 'Local', { maxAge: 30 * 24 * 60 * 60 * 1000 });
+                } else {
+                    res.cookie('authType', 'Local');
+                }
+                res.json({ status: 'validate successfully' });
+            });
+
+        app.get('/auth/login/o365', function (req, res, next) {
+            var email = req.cookies[Constants.O365Email];
+            passport.authenticate('O365', {
                 resourceURL: Constants.AADGraphResource,
                 customState: 'my_state',
                 failureRedirect: '/',
@@ -173,7 +182,7 @@ export class appAuth {
         // `passport.authenticate` will try to authenticate the content returned in
         // query (such as authorization code). If authentication fails, user will be
         // redirected to '/' (home page); otherwise, it passes to the next middleware.
-        app.get('/auth/openid/return', passport.authenticate('azuread-openidconnect', { failureRedirect: '/' }), function (req, res) {
+        app.get('/auth/openid/return', passport.authenticate('O365', { failureRedirect: '/' }), function (req, res) {
             res.redirect('/');
         });
 
@@ -181,7 +190,7 @@ export class appAuth {
         // `passport.authenticate` will try to authenticate the content returned in
         // body (such as authorization code). If authentication fails, user will be
         // redirected to '/' (home page); otherwise, it passes to the next middleware.
-        app.post('/auth/openid/return', passport.authenticate('azuread-openidconnect', { failureRedirect: '/' }), function (req, res) {
+        app.post('/auth/openid/return', passport.authenticate('O365', { failureRedirect: '/' }), function (req, res) {
             res.redirect('/');
         });
 
@@ -196,15 +205,5 @@ export class appAuth {
             else
                 res.redirect('/');
         });
-
-        app.post('/account/login', passport.authenticate('localStrategy'),
-            function (req, res) {
-                if (req.body.remember) {
-                    res.cookie('authType', 'Local', { maxAge: 30 * 24 * 60 * 60 * 1000 });
-                } else {
-                    res.cookie('authType', 'Local');
-                }
-                res.json({ status: 'validate successfully' });
-            });
     }
 }

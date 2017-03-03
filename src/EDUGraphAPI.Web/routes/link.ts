@@ -61,8 +61,7 @@ router.post('/O365User', function (req, res) {
     var localUser = req.user;
     localUser.oid = idToken.oid;
     localUser.tid = tentantId;
-
-    //
+    
     AuthenticationHelper.getAccessTokenByCode(req.user.oid, code, Constants.MSGraphResource, 'api/link/O365User')
         .then(authResult => {
             return userService.linkO365User(authResult.accessToken, idToken.oid, idToken.upn, localUser.id, tentantId)
@@ -76,10 +75,10 @@ router.post('/O365User', function (req, res) {
                 errorMsg = error;
             }
             else if (error != null && error.hasOwnProperty('message')) {
-                errorMsg = error.message
+                errorMsg = error.message;
             }
             else {
-                errorMsg = 'unknown error'
+                errorMsg = 'unknown error';
             }
             res.redirect('/link?error=' + encodeURI(errorMsg as string));
         });

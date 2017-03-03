@@ -3,6 +3,7 @@
 * See LICENSE in the project root for license information.
 */
 import { Organization } from './organization';
+
 export class UserInfo {
     id: string;
     email: string;

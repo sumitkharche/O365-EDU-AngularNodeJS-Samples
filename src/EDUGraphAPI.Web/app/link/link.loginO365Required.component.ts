@@ -47,7 +47,7 @@ export class LinkLoginO365Required implements OnInit {
     reLoginO365() {
         var userName = this.userInfo.firstName + ' ' + this.userInfo.lastName;
         Cookie.SetCookiesForO365Users(userName, this.userInfo.o365Email);
-        window.location.href = '/o365Login';
+        window.location.href = '/auth/login/o365';
     }
 
     initMessage() {

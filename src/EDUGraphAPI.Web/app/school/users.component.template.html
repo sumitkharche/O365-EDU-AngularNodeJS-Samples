@@ -1,5 +1,5 @@
 ﻿<!-- Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license. -->
-<!-- See LICENSE in the project root for license information --> 
+<!-- See LICENSE in the project root for license information -->
 <div class="row schools teacher-student">
     <div class="tophero" *ngIf="school">
         <div class="col-md-8">
@@ -12,7 +12,8 @@
             <div class="section-school-name">{{school.DisplayName}}</div>
             <div class="infocontainer">
                 <div class="infoheader">PRINCIPAL</div>
-                <div class="infobody" title="Amy Roebuck">{{school.PrincipalName}}<span *ngIf="!school.PrincipalName">-</span>
+                <div class="infobody" title="Amy Roebuck">
+                    {{school.PrincipalName}}<span *ngIf="!school.PrincipalName">-</span>
                 </div>
             </div>
             <div class="infocontainer">
@@ -22,11 +23,14 @@
         </div>
         <div>
             <div class="col-md-6 usericon">
-                <div class="stuicon"></div><div>Student</div>
-                <div class="teacicon"></div><div>Teacher</div>
+                <div class="stuicon"></div>
+                <div>Student</div>
+                <div class="teacicon"></div>
+                <div>Teacher</div>
             </div>
             <div class="col-md-6 filterlink-container">
-                <span>FILTER:</span> <a id="filterteacher" class="filterlink" [class.selected]="view === 'teachers'" (click)="switchView('teachers')"> Teachers</a> | <a id="filterstudnet" class="filterlink" [class.selected]="view === 'students'" (click)="switchView('students')">Students</a> | <a id="filterall" class="filterlink" [class.selected]="view === 'users'" (click)="switchView('users')">All</a>
+                <span>FILTER:</span>
+                <a id="filterteacher" class="filterlink" [class.selected]="view === 'teachers'" (click)="switchView('teachers')"> Teachers</a> | <a id="filterstudnet" class="filterlink" [class.selected]="view === 'students'" (click)="switchView('students')">Students</a> | <a id="filterall" class="filterlink" [class.selected]="view === 'users'" (click)="switchView('users')">All</a>
             </div>
         </div>
         <br style="clear:both;">

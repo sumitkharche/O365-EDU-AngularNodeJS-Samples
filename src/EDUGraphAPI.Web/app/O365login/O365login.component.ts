@@ -48,7 +48,7 @@ import { AuthHelper } from "../authHelper/authHelper";
         .logino365 .bodytext, .logino365 .link,.logino365 .formstyle{text-align:center;margin:20px 0 0 0;font-size:16px;}
         .logino365 .link a{color:#4B67F8;}
         .logino365 .formstyle button{background-image:url('/app/Images/SignInButton.png');width:106px;}
-        `]
+    `]
 })
 
 export class O365login implements OnInit {
@@ -60,21 +60,19 @@ export class O365login implements OnInit {
         private router: Router,
         private activatedRoute: ActivatedRoute,
         @Inject('auth') private auth: AuthHelper
-) {
-
-    }
+    ) { }
 
     ngOnInit() {
-        this.username = Cookie.get(Constants.UsernameCookie);
-        this.email = Cookie.get(Constants.EmailCookie);
+        this.username = Cookie.get(Constants.O365Username);
+        this.email = Cookie.get(Constants.O365Email);
     }
 
     login() {
         this.auth.login();
     }
+
     loginWithOtherAccount() {
         Cookie.RemoveAllO365UsersCookies();
         this.router.navigate(['login']);
     }
-
 }

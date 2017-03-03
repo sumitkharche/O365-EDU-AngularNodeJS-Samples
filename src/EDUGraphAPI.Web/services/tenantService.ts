@@ -47,5 +47,4 @@ export class TenantService {
             created: new Date()
         });
     }
-
 }

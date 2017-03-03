@@ -12,6 +12,7 @@ var userService = new UserService();
 
 router.post('/', function (req, res) {
     var user = req.body;
+    user.email = user.email.toLowerCase();
     userService.creatUser(user.email, user.password, user.firstName, user.lastName, user.favoriteColor)
         .then(user => res.send(201, user))
         .catch(error => res.json(500, { error: error }));

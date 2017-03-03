@@ -4,7 +4,6 @@
 */
 import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
 import { Login } from './login/login.component';
 import { O365login } from './O365login/O365login.component';
 import { Header } from './header/header.component';
@@ -23,7 +22,7 @@ export const appRoutes: Routes = [
     { path: 'link', redirectTo: "link" },
     { path: 'demoHelper', component: DemoHelper },
     { path: 'aboutme', component: AboutMe },
-    { path: 'O365login', component: O365login},
+    { path: 'O365login', component: O365login },
     { path: '**', component: HomeComponent }
 ];
 

@@ -9,7 +9,7 @@ export class BingMapService {
      */
     public static getLatitudeAndLongitude(state: string, city: string, address: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            var url = `//dev.virtualearth.net/REST/v1/Locations/US/${state}/${city}/${address}?output=json&key=${Constants.BING_MAP_KEY}`;
+            var url = `//dev.virtualearth.net/REST/v1/Locations/US/${state}/${city}/${address}?output=json&key=${Constants.BingMapKey}`;
             return $.ajax({
                 url: url,
                 dataType: "jsonp",

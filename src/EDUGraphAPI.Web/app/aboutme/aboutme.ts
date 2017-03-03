@@ -3,6 +3,7 @@
 * See LICENSE in the project root for license information.
 */
 import { ColorEntity } from '../models/common/colorEntity'
+
 export class AboutMeModel {
 
     public UserName: string;

@@ -4,7 +4,7 @@
 */
 import * as request from 'superagent';
 import * as Promise from "bluebird";
-import { Constants, O365ProductLicenses, Roles} from '../constants';
+import { Constants, O365ProductLicenses, Roles } from '../constants';
 
 export class MSGraphClient {
 
@@ -20,7 +20,7 @@ export class MSGraphClient {
             roles: [],
             organization: null
         };
-       return this.getMe()
+        return this.getMe()
             .then((user) => {
                 o365UserInfo.user = user
                 return this.getRoles(user)
@@ -56,7 +56,7 @@ export class MSGraphClient {
     public getOrganization(tenantID: string): Promise<any> {
         return new Promise((resolve, reject) => {
             request
-                .get(Constants.MSGraphResource + "/v1.0/organization/" + tenantID +"?$select=id,displayName")
+                .get(Constants.MSGraphResource + "/v1.0/organization/" + tenantID + "?$select=id,displayName")
                 .set('Authorization', 'Bearer ' + this.accessToken)
                 .end((err, res) => {
                     if (err) {
@@ -77,7 +77,7 @@ export class MSGraphClient {
                         return reject(err)
                     }
                     let directoryRole = res.body.value as Array<any>;
-                    resolve(directoryRole.find(dr =>  dr.displayName == Constants.AADCompanyAdminRoleName ));
+                    resolve(directoryRole.find(dr => dr.displayName == Constants.AADCompanyAdminRoleName));
                 })
         })
     }

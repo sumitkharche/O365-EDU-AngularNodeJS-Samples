@@ -19,7 +19,7 @@ import { UserService } from "../services/userService";
 })
 
 export class LinkCreateLocal implements OnInit {
-    
+
     localModel: CreateLocalModel;
     favoriteColors: ColorEntity[];
     checkPwdRequired: boolean = true;
@@ -39,7 +39,7 @@ export class LinkCreateLocal implements OnInit {
         this.favoriteColors = Constants.FavoriteColors;
         this.localModel.favoriteColor = this.favoriteColors[0].Value;
     }
-    
+
     checkValid() {
         return true;
     }

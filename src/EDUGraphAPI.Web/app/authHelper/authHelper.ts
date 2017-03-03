@@ -19,12 +19,12 @@ export class AuthHelper {
     }
 
     public IsLogin(): boolean {
-        var token = Cookie.get(Constants.LOGIN_TOKEN);
+        var token = Cookie.get(Constants.AuthType);
         return token && token != "undefined";
     }
 
     public reLogin() {
-        Cookie.delete(Constants.LOGIN_TOKEN);
+        Cookie.delete(Constants.AuthType);
         this.router.navigate(['login']);
     }
 
@@ -35,11 +35,11 @@ export class AuthHelper {
     }
 
     public getAADGraphToken(): Observable<string> {
-        return this.getToken(Constants.COOKIE_TOKEN, Constants.AADGraphResource);
+        return this.getToken(Constants.AADGraphAccessToken, Constants.AADGraphResource);
     }
 
     public getMSGraphToken(): Observable<string> {
-        return this.getToken(Constants.MS_COOKIE_TOKEN, Constants.MSGraphResource);
+        return this.getToken(Constants.MSGraphAccessToken, Constants.MSGraphResource);
     }
 
     private getToken(tokenName: string, siteURL: string): Observable<string> {
@@ -75,6 +75,6 @@ export class AuthHelper {
     }
 
     login() {
-        window.location.href = "/o365login";
+        window.location.href = "/auth/login/o365";
     }
 }

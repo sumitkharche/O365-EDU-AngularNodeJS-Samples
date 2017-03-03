@@ -5,7 +5,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-
 import { GraphHelper } from '../utils/graphHelper'
 import { PagedCollection } from '../models/common/pagedCollection';
 import { SchoolModel } from '../school/school';

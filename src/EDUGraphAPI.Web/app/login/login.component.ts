@@ -109,7 +109,7 @@ export class Login implements OnInit {
                                 window.location.href = "/link";
                             }
                         });
-                   
+
                 } else {
                     this.showLoginFailed = true;
                 }

@@ -2,6 +2,7 @@
 * Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 * See LICENSE in the project root for license information.
 */
+
 /// <reference path="../../node_modules/@types/jquery/index.d.ts" />
 
 import { Injectable, Inject } from '@angular/core';
@@ -11,6 +12,7 @@ import { AuthHelper } from "../authHelper/authHelper";
 
 @Injectable()
 export class UserPhotoService {
+
     constructor(
         @Inject('auth') private authService: AuthHelper) {
     }
@@ -32,7 +34,7 @@ export class UserPhotoService {
                             var dataUrl = `data:image/jpeg;base64,${ConvertHelper.BinaryToBase64(data)}`;
                             resolve(dataUrl);
                         },
-                        error:  function(ex) {
+                        error: function (ex) {
                             resolve("app/images/header-default.jpg");
                         }
                     });

@@ -14,7 +14,6 @@ import { SchoolService } from '../school/school.service';
 import { UserModel } from '../school/user';
 import { UserPhotoService } from '../services/userPhotoService';
 
-
 @Component({
     moduleId: module.id,
     selector: '',
@@ -65,15 +64,12 @@ export class AboutMe implements OnInit {
                 } else {
                     this.userRole = "Admin";
                 }
-
-                //user.o365UserId
+                
                 if (user.o365UserId) {
                     this.userPhotoService.getUserPhotoUrl(user.o365UserId)
                         .then(url => this.userPhoto = url);
                 }
-                
             });
-
 
         this.aboutMeservice
             .getMyClasses()
@@ -87,6 +83,7 @@ export class AboutMe implements OnInit {
                 });
             });
     }
+
     isUserAdmin(user: UserInfo): boolean {
         let result = false;
         let roles = user.roles;
@@ -100,6 +97,7 @@ export class AboutMe implements OnInit {
         }
         return result;
     }
+
     updateFavoriteColor() {
         this.aboutMeservice.updateFavoriteColor(this.model.MyFavoriteColor).then((response) => {
             this.model.SaveSucceeded = response.ok;

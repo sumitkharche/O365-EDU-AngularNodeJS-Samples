@@ -55,7 +55,7 @@ export class AdminComponent implements OnInit {
     unconsent() {
         const errorMessage: string = "Admin unconsent failed.";
         this.adminService.unconsent().then((succeed) => {
-            if (succeed ) {
+            if (succeed) {
                 this.IsAdminConsented = false;
                 this.message = "";
             }
@@ -88,6 +88,7 @@ export class AdminComponent implements OnInit {
             this.adminService.setIsAdminConsented().then(() => {
                 this.message = 'Admin Consent has been applied.';
                 this.IsAdminConsented = true;
+                window.location.hash = '';
             }).catch((error) => {
                 this.error = error;
             });

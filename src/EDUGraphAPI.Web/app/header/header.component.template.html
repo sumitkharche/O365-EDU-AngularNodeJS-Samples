@@ -19,7 +19,8 @@
             </ul>
             <form class="navbar-right" id="logoutForm" method="post">
                 <div class="userinfo">
-                    <a href="javascript:void(0);" id="userinfolink" (click)="showContextMenu(this)"><span  *ngIf="userRole"> Logged in as: {{userRole}}.</span> <span *ngIf="fullName">Hello {{fullName}}</span>
+                    <a href="javascript:void(0);" id="userinfolink" (click)="showContextMenu(this)">
+                        <span *ngIf="userRole"> Logged in as: {{userRole}}.</span> <span *ngIf="fullName">Hello {{fullName}}</span>
                         <img *ngIf="userPhoto" src="{{userPhoto}}">
                     </a>
                     <span *ngIf="fullName" class="caret" id="caret" [class.transformcaret]="ifShowContextMenu"></span>

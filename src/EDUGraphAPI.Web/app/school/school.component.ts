@@ -2,11 +2,12 @@
 * Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 * See LICENSE in the project root for license information.
 */
+
 /// <reference path="../../node_modules/bingmaps/scripts/MicrosoftMaps/Microsoft.Maps.d.ts" />
 /// <reference path="../../node_modules/@types/jquery/index.d.ts" />
+
 import { Component, OnInit, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-
 import { SchoolModel } from './school'
 import { SchoolService } from './school.service';
 import { BingMapHelper } from '../utils/bingMapHelper'
@@ -15,6 +16,7 @@ import { UserModel } from './user'
 import { Constants } from '../constants';
 import { MeService } from "../services/meService";
 import { Cookie } from '../services/cookieService';
+
 @Component({
     moduleId: module.id,
     selector: 'schools-list',
@@ -26,6 +28,7 @@ import { Cookie } from '../services/cookieService';
 })
 
 export class SchoolComponent implements OnInit {
+
     schools: SchoolModel[];
     me: UserModel;
     mySchool: SchoolModel;
@@ -79,7 +82,7 @@ export class SchoolComponent implements OnInit {
                     });
             });
         this.initLocalAndLinkedState();
-        if (Constants.BING_MAP_KEY) {
+        if (Constants.BingMapKey) {
             this.showBingMapIcon = true;
         }
     }
@@ -122,7 +125,7 @@ export class SchoolComponent implements OnInit {
         const longitude: string = element.attr("longitude");
         if (latitude && longitude) {
             var map = new Microsoft.Maps.Map(myMap[0], {
-                credentials: Constants.BING_MAP_KEY,
+                credentials: Constants.BingMapKey,
                 center: new Microsoft.Maps.Location(latitude, longitude),
                 mapTypeId: Microsoft.Maps.MapTypeId.road,
                 showMapTypeSelector: false,

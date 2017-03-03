@@ -11,7 +11,6 @@ var gulp = require('gulp'),
 
 var tsProject = ts.createProject('tsconfig.json');
 
-
 // build server side ts
 gulp.task('ts-server', () => {
     return gulp.src(['**/*.ts', '!app{,/**}', '!dist{,/**}', '!node_modules{,/**}'])

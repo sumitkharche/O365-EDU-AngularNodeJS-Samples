@@ -40,5 +40,4 @@ export class SchoolService {
                 return Promise.all(promises);
             })
     }
-
 }

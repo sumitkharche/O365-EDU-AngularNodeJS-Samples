@@ -5,7 +5,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { Http, Headers, Response, RequestOptionsArgs } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-
 import { SchoolModel } from '../school/school';
 import { UserModel } from '../school/user';
 import { AuthorizationHelper, Prompt } from '../utils/AuthorizationHelper';

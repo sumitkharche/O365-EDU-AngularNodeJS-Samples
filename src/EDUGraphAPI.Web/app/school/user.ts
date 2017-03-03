@@ -3,6 +3,7 @@
 * See LICENSE in the project root for license information.
 */
 import { JsonProperty } from '../utils/jsonhelper'
+
 export class UserModel {
 
     @JsonProperty("mail")

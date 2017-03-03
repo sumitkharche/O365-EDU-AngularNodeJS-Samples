@@ -2,6 +2,7 @@
 * Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 * See LICENSE in the project root for license information.
 */
+
 /// <reference path="../../node_modules/@types/jquery/index.d.ts" />
 
 import { Component, OnInit, Inject, OnDestroy, AfterViewChecked, AfterContentInit } from '@angular/core';
@@ -45,7 +46,7 @@ export class ClassDetailComponent implements OnInit, AfterContentInit {
     seatingsCount = [];
     isEditing: boolean = false;
     dragId: string = "";
-    
+
     sortAsc: boolean = false;
     sortDocAsc: boolean = false;
 
@@ -56,7 +57,7 @@ export class ClassDetailComponent implements OnInit, AfterContentInit {
         @Inject('schoolService') private schoolService: SchoolService,
         @Inject('userPhotoService') private userPhotoService: UserPhotoService,
         @Inject('user') private userService: UserService
-       ) {
+    ) {
     }
 
     ngOnInit() {
@@ -123,10 +124,10 @@ export class ClassDetailComponent implements OnInit, AfterContentInit {
                                                                 this.setSeatings();
                                                                 this.sortMembers();
                                                             });
-                                                        
+
                                                     }
                                                 });
-                                                
+
                                             });
                                     });
                             });

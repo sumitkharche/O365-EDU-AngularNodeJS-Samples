@@ -17,6 +17,7 @@ export class UserService {
     private dbContext = new DbContext();
 
     public creatUser(email: string, password: string, firstName: string, lastName: string, favoriteColor: string): Promise<UserInstance> {
+        email = email.toLowerCase();
         return this.dbContext.User
             .findOne({ where: { email: email } })
             .then(user => {
@@ -43,6 +44,7 @@ export class UserService {
     }
 
     public validUser(email: string, password: string): Promise<any> {
+        email = email.toLowerCase();
         let retUser;
         return this.dbContext.User
             .findOne({ where: { email: email } })
@@ -99,6 +101,7 @@ export class UserService {
     }
 
     public validUserHasSameEmail(email: string): Promise<boolean> {
+        email = email.toLowerCase();
         return this.dbContext.User
             .findOne({ where: { email: email } })
             .then(user => {
@@ -229,11 +232,12 @@ export class UserService {
                     userInfo.organization.isAdminConsented = result;
                     return userInfo;
                 });
-                
+
             })
     }
 
     public linkLocalUser(o365User: any, localEmail: string, localPassword: string): Promise<any> {
+        localEmail = localEmail.toLowerCase();
         let localUserId: string;
         return this.dbContext.User
             .findOne({ where: { email: localEmail } })
@@ -257,6 +261,7 @@ export class UserService {
     }
 
     public linkMatchingLocalUser(o365User: any): Promise<any> {
+        o365User.upn = o365User.upn.toLowerCase()
         let localUserId: string;
         return this.dbContext.User
             .findOne({ where: { email: o365User.upn } })
@@ -311,6 +316,7 @@ export class UserService {
     }
 
     public GetUserFavoriteColorByO365Email(o365Email: string): Promise<string> {
+        o365Email = o365Email.toLowerCase();
         return this.dbContext.User
             .findOne({ where: { o365Email: o365Email } })
             .then(user => {
@@ -320,7 +326,6 @@ export class UserService {
             });
     }
 
-
     private updateUser(userId: string, user: any): Promise<any> {
         return this.getUserById(userId).then(u => {
             let promises = new Array<Promise<any>>();
@@ -328,7 +333,7 @@ export class UserService {
             if (user.firstName != undefined) u.firstName = user.firstName;
             if (user.lastName != undefined) u.lastName = user.lastName;
             if (user.o365UserId != undefined) u.o365UserId = user.o365UserId;
-            if (user.o365Email != undefined) u.o365Email = user.o365Email
+            if (user.o365Email != undefined) u.o365Email = user.o365Email.toLowerCase();
             if (user.favoriteColor != undefined) u.favoriteColor = user.favoriteColor;
             promises.push(u.save());
 

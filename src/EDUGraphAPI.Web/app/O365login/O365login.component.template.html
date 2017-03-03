@@ -1,23 +1,14 @@
 ﻿<div class="loginbody logino365">
-
     <h3>Sign in</h3>
-
-    <div class="headertext">
-       {{username}}
-    </div>
-    <div class="bodytext">
-        {{email}}
-    </div>
-    <div class="bodytext">
-        Office 365 account
-    </div>
+    <div class="headertext">{{username}}</div>
+    <div class="bodytext">{{email}}</div>
+    <div class="bodytext">Office 365 account</div>
     <div class="formstyle">
         <div id="socialLoginList">
             <p>
                 <button type="submit" class="btn btn-default btn-ms-login" id="OpenIdConnect" name="provider" value="OpenIdConnect" title="Log in " (click)="login()"></button>
             </p>
         </div>
-       
     </div>
     <div class="link">
         <a (click)="loginWithOtherAccount()">Use a different account</a>

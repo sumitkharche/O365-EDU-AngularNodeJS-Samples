@@ -30,7 +30,6 @@ export class MyClassesComponent implements OnInit {
     noDataText: string = "";
     me: UserModel;
 
-
     constructor(
         private router: Router,
         private route: ActivatedRoute,

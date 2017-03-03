@@ -14,11 +14,11 @@ import { Router } from '@angular/router';
 })
 
 export class ConsentComponent implements OnInit {
-        
+
     error: string;
     message: string;
 
-    constructor(private router: Router) {    }
+    constructor(private router: Router) { }
 
     ngOnInit() {
         this.initMessage();
@@ -26,7 +26,7 @@ export class ConsentComponent implements OnInit {
 
     consent() {
         window.location.href = '/api/admin/consent';
-    }    
+    }
 
     private initMessage() {
         this.error = UrlHelper.getQueryValue('error');

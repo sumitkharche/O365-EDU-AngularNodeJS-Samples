@@ -47,8 +47,8 @@ EDUGraphAPI is based on NodeJS (the server side) and Angular 2 (the client side)
   Additionally: Developing/running this sample locally requires the following:  
 
   - Visual Studio 2015 (any edition), [Visual Studio 2015 Community](https://go.microsoft.com/fwlink/?LinkId=691978&clcid=0x409) is available for free.
-  - [Visual Studio 2015 Community](https://go.microsoft.com/fwlink/?LinkId=691978&clcid=0x409)
   - [TypeScript for Visual Studio 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48593)
+  - [Node.js](https://nodejs.org/)
   - [Node.js Tools 1.2](http://aka.ms/ntvs1.2.RTW.2015)
   - [Git](https://git-scm.com/download/win)
   - Familiarity with Node.js, TypeScript, Angular and web services.
@@ -134,6 +134,7 @@ This project can be opened with the edition of Visual Studio 2015 you already ha
 The following tools are also required:
 
 - [TypeScript for Visual Studio 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48593)
+- [Node.js](https://nodejs.org/)
 - [Node.js Tools 1.2](http://aka.ms/ntvs1.2.RTW.2015)
 - [Git](https://git-scm.com/download/win)
 
@@ -148,7 +149,11 @@ Debug the **EDUGraphAPI.Web**:
    - **BingMapKey**: use the key of Bing Map you got earlier. This setting is optional.
    - **SourceCodeRepositoryURL**: use the repository URL of your fork.
 
-2. Press **F5**. 
+2. In the Solution Explorer, right click **npm**, then click **Install Missing npm Packages**:
+
+   ![](/Images/install-missing-npm-packages.png)
+
+3. Press **F5**. 
 
 ## Deploy the sample to Azure
 
