@@ -6,6 +6,7 @@ import { DbContext, TokenCacheInstance } from '../data/dbContext';
 import * as Promise from "bluebird";
 import { Constants } from '../constants';
 
+// In this sample, tokens are cached in clear text in database. For real projects, they should be encrypted.
 export class TokenCacheService {
 
     private dbContext = new DbContext();
