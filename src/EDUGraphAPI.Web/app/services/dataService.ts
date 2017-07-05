@@ -2,14 +2,15 @@
 * Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 * See LICENSE in the project root for license information.
 */
+
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/toPromise';
 import { Injectable, Inject } from '@angular/core';
 import { PagedCollection } from '../models/common/pagedCollection';
 import { Http, Response, Headers } from '@angular/http';
-import 'rxjs/add/operator/map'
 import { Observable, ReplaySubject } from 'rxjs/Rx';
-import 'rxjs/add/operator/catch';
-import { SchoolModel } from '../school/school'
-import 'rxjs/add/operator/toPromise';
+import { SchoolModel } from '../school/school';
 import { AuthHelper } from "../authHelper/authHelper";
 
 export class Item {

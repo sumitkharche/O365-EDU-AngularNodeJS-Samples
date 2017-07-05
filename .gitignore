@@ -368,3 +368,14 @@ BuildProcessTemplates/
 
 ### bundle.js ###
 bundle.js
+
+
+### .js and .map ###
+*.map
+*.js
+!gulpfile.js
+!systemjs.config.js
+
+
+### SQLite ###
+*.sqlite

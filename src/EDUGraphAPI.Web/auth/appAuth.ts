@@ -66,18 +66,18 @@ export class appAuth {
         return new this.OIDCStrategy({
             identityMetadata: Constants.IdentityMetadata,
             clientID: Constants.ClientId,
-            responseType: Constants.ResponseType,
-            responseMode: Constants.ResponseMode,
+            responseType: 'code',
+            responseMode: 'form_post',
             redirectUrl: this.app.get('env') === 'development'
-                ? 'https://localhost:44380' + Constants.RedirectUrl
-                : 'https://' + Constants.Host + Constants.RedirectUrl,
-            allowHttpForRedirectUrl: Constants.AllowHttpForRedirectUrl,
+                ? 'https://localhost:44380/auth/openid/return'
+                : 'https://' + Constants.Host + '/auth/openid/return',
+            allowHttpForRedirectUrl: true,
             clientSecret: Constants.ClientSecret,
-            validateIssuer: Constants.ValidateIssuer,
+            validateIssuer: false,
             isB2C: false,
-            passReqToCallback: Constants.PassReqToCallback,
-            loggingLevel: Constants.LoggingLevel,
-            nonceLifetime: Constants.NonceLifetime,
+            passReqToCallback: true,
+            loggingLevel: 'info',
+            nonceLifetime: null,
         }, function (req, iss, sub, profile, jwtClaims, access_token, refresh_token, params, done) {
             if (!profile.oid) {
                 return done(new Error("No oid found"), null);
@@ -201,7 +201,7 @@ export class appAuth {
             req.logOut();
             req.session = null;
             if (authType == 'O365')
-                res.redirect(Constants.DestroySessionUrl + req.protocol + '://' + req.get('host'));
+                res.redirect(Constants.Authority + 'oauth2/logout?post_logout_redirect_uri=' + req.protocol + '://' + req.get('host'));
             else
                 res.redirect('/');
         });

@@ -360,7 +360,6 @@ ul.nav-tabs[_ngcontent-rnm-5]    > li.active[_ngcontent-rnm-5]{background-color:
 .seated{color:#237e17;text-transform:uppercase;font-family:'Helvetica Neue LT Std Bold'; font-size:10px;}
 
 .teacherdesk{font-family:'Helvetica Neue LT Std Bold'; font-size:10px; color:white; width:200px; margin:auto; border:1px solid gray; background-color:#ABABAB; text-transform:uppercase; margin-bottom:20px; height:60px; line-height:60px; text-align:center;}
-/*.deskclose, #imgsave, #imgcancel{display:none;}*/
 .greenlist{background-color: #287F79;}
 .greenlist *{color:white;}
 .greenTileTooltip{font-family:'Helvetica Neue LT Std Bold'; background-color:#287F79;color:white;text-align:center;height:98px;width:98px;text-transform:uppercase;padding-top:20px;}

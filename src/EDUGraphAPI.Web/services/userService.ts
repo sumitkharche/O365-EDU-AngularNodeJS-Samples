@@ -382,8 +382,7 @@ export class UserService {
             o365Email: o365UserInfo.user.mail == null ? o365UserInfo.user.userPrincipalName : o365UserInfo.user.mail,
             organization: o365UserInfo.organization == null ? null : {
                 tenantId: o365UserInfo.organization.id,
-                name: o365UserInfo.organization.displayName,
-                //isAdminConsented: isAdminConsented
+                name: o365UserInfo.organization.displayName
             },
             roles: o365UserInfo.roles
         };

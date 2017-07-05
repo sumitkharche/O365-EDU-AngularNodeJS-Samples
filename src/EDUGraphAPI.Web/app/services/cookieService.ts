@@ -2,6 +2,7 @@
 * Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 * See LICENSE in the project root for license information.
 */
+
 /**
  * Class Cookie - Holds static functions to deal with Cookies
  */
@@ -11,9 +12,6 @@ export class Cookie {
 
 	/**
 	 * Checks the existence of a single cookie by it's name
-	 * 
-	 * @param  {string} name Identification of the cookie
-	 * @returns existence of the cookie
 	 */
     public static check(name: string): boolean {
         name = encodeURIComponent(name);
@@ -24,9 +22,6 @@ export class Cookie {
 
 	/**
 	 * Retrieves a single cookie by it's name
-	 *
-	 * @param  {string} name Identification of the Cookie
-	 * @returns The Cookie's value
 	 */
     public static get(name: string): string {
         if (Cookie.check(name)) {
@@ -40,9 +35,7 @@ export class Cookie {
     }
 
 	/**
-	 * Retrieves a a list of all cookie avaiable
-	 *
-	 * @returns Object with all Cookies
+	 * Retrieves all available cookies
 	 */
     public static getAll(): any {
         let cookies: any = {};
@@ -65,8 +58,8 @@ export class Cookie {
 	 * @param  {string} name Cookie's identification
 	 * @param  {string} value Cookie's value
 	 * @param  {number} expires Cookie's expiration date in minutes from now or at a specific date from a Date object. If it's undefined the cookie is a session Cookie
-	 * @param  {string} path Path relative to the domain where the cookie should be avaiable. Default /
-	 * @param  {string} domain Domain where the cookie should be avaiable. Default current domain
+	 * @param  {string} path Path relative to the domain. The default value is '/'
+	 * @param  {string} domain The default value is current domain
 	 * @param  {boolean} secure If true, the cookie will only be available through a secured connection
 	 */
     public static set(name: string, value: string, expires?: number | Date, path?: string, domain?: string, secure?: boolean) {
@@ -98,8 +91,8 @@ export class Cookie {
 	 * Removes specified Cookie
 	 *
 	 * @param  {string} name Cookie's identification
-	 * @param  {string} path Path relative to the domain where the cookie should be avaiable. Default /
-	 * @param  {string} domain Domain where the cookie should be avaiable. Default current domain
+	 * @param  {string} path Path relative to the domain. The default value is '/'
+	 * @param  {string} domain The default value is current domain
 	 */
     public static delete(name: string, path?: string, domain?: string) {
         // If the cookie exists
@@ -109,7 +102,7 @@ export class Cookie {
     }
 
 	/**
-	 * Delete all cookie avaiable
+	 * Delete all cookies
 	 */
     public static deleteAll(path?: string, domain?: string): any {
         let cookies: any = Cookie.getAll();

@@ -61,7 +61,7 @@ router.post('/O365User', function (req, res) {
     var localUser = req.user;
     localUser.oid = idToken.oid;
     localUser.tid = tentantId;
-    
+
     AuthenticationHelper.getAccessTokenByCode(req.user.oid, code, Constants.MSGraphResource, 'api/link/O365User')
         .then(authResult => {
             return userService.linkO365User(authResult.accessToken, idToken.oid, idToken.upn, localUser.id, tentantId)

@@ -30,7 +30,7 @@ export class SchoolService {
     }
 
     /**
-     * Retrieves all schools.
+     * Retrieves all schools
      * Reference URL: https://msdn.microsoft.com/office/office365/api/school-rest-operations#get-all-schools
      */
     getSchools(): Observable<any[]> {
@@ -38,7 +38,7 @@ export class SchoolService {
     }
 
     /**
-	 * Retrieves school by id.
+	 * Retrieves a school by id
      * @param  {string} id Identification of the school
      * Reference URL: https://msdn.microsoft.com/office/office365/api/school-rest-operations#get-a-school.
 	 */
@@ -46,18 +46,18 @@ export class SchoolService {
         return this.dataService.getObject(this.urlBase + '/administrativeUnits/' + id + '?api-version=beta');
     }
     /**
-    * Retrieves all classes of a school.
-    * @param  {string} schoolId Identification of the school
-    * @param  {string} nextLink next link in the previous response for next page
-    * Reference URL: https://msdn.microsoft.com/office/office365/api/school-rest-operations#get-sections-within-a-school.
-    */
+     * Retrieves classes of a school
+     * @param  {string} schoolId Identification of the school
+     * @param  {string} nextLink next link in the previous response for next page
+     * Reference URL: https://msdn.microsoft.com/office/office365/api/school-rest-operations#get-sections-within-a-school.
+     */
     getClasses(schoolId: string, nextLink: string): Observable<PagedCollection<any>> {
         let url: string = this.urlBase + "/groups?api-version=beta&$top=12&$filter=extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20'Section'%20and%20extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20'" + schoolId + "'" +
             (nextLink ? "&" + GraphHelper.getSkipToken(nextLink) : '');
         return this.dataService.getPagedCollection<any>(url);
     }
     /**
-     * Get current user's information from AD
+     * Get current user's information
      * Reference URL: https://msdn.microsoft.com/en-us/office/office365/api/teacher-rest-operations
      */
     getMe(): Observable<any> {
@@ -65,8 +65,7 @@ export class SchoolService {
     }
 
     /**
-     * Get current users's classes.
-     * @param schoolId
+     * Get current user's classes
      * Reference URL: https://msdn.microsoft.com/en-us/office/office365/api/section-rest-operations
      */
     getMyClasses(schoolId: string): Observable<any[]> {
@@ -74,21 +73,24 @@ export class SchoolService {
     }
 
     /**
-    * Get a section by using the object_id.
-    * Reference URL: https://msdn.microsoft.com/office/office365/api/section-rest-operations#get-a-section.
-    * @param classId The Object ID of the section group in Azure Active Directory.
-    * <returns></returns>
+     * Get a section
+     * Reference URL: https://msdn.microsoft.com/office/office365/api/section-rest-operations#get-a-section.
+     * @param classId The Object ID of the section
      */
     getClassById(classId: string): Observable<any> {
         return this.dataService.getObject<any>(this.urlBase + "/groups/" + classId + "?api-version=beta&$expand=members");
     }
 
+    /**
+     * Get members of a class
+     * @param classId The Object ID of the section
+     */
     getClassMembers(classId: string): Observable<PagedCollection<any>> {
         return this.dataService.getPagedCollection<any>(this.urlBase + "/groups/" + classId + "/members?api-version=1.5");
     }
 
     /**
-     * Get all users of a school.
+     * Get users of a school
      * @param  {string} schoolId Identification of the school
      * @param  {string} nextLink next link in the previous response for next page
      * Reference URL: https://msdn.microsoft.com/en-us/office/office365/api/school-rest-operations#get-school-members
@@ -100,7 +102,7 @@ export class SchoolService {
     }
 
     /**
-     * Get all students of a school.
+     * Get students of a school
      * @param  {string} schoolId Identification of the school
      * @param  {string} nextLink next link in the previous response for next page
      * Reference URL: https://msdn.microsoft.com/en-us/office/office365/api/school-rest-operations#get-school-members
@@ -114,10 +116,10 @@ export class SchoolService {
     }
 
     /**
-     * Get all teachers of a school.
-    * @param  {string} schoolId Identification of the school
-    * @param  {string} nextLink next link in the previous response for next page
-    * Reference URL: https://msdn.microsoft.com/en-us/office/office365/api/school-rest-operations#get-school-members
+     * Get teachers of a school
+     * @param  {string} schoolId Identification of the school
+     * @param  {string} nextLink next link in the previous response for next page
+     * Reference URL: https://msdn.microsoft.com/en-us/office/office365/api/school-rest-operations#get-school-members
      */
     getTeachers(schoolId: string, nextLink: string): Observable<PagedCollection<any>> {
         var url = this.urlBase + "/users?api-version=1.5&$filter=extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20'" + schoolId +
@@ -127,8 +129,7 @@ export class SchoolService {
     }
 
     /**
-     * Get all documents from OneDrive.
-     * @param classId
+     * Get documents of a class
      * Reference URL: https://dev.onedrive.com/items/list.htm.
      */
     getDocuments(classId: string): Observable<any[]> {
@@ -142,8 +143,7 @@ export class SchoolService {
     }
 
     /**
-     * Get a group's conversations.
-     * @param classId
+     * Get conversations of a class
      * Reference URL: https://graph.microsoft.io/en-us/docs/api-reference/v1.0/api/group_list_threads.
      */
     getConversations(classId: string): Observable<any[]> {

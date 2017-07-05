@@ -287,7 +287,7 @@ export class ClassDetailComponent implements OnInit, AfterContentInit {
     }
 
     cancelEditDesk() {
-        //new added to seat chart
+        // new added to seat chart
         $(".desktile .deskcontainer.unsaved").each(function () {
             var prevId = $(this).attr("ng-reflect-prev-position");
             if (!prevId || prevId == "0") {
@@ -303,7 +303,7 @@ export class ClassDetailComponent implements OnInit, AfterContentInit {
 
         });
 
-        //deleted
+        // deleted
         $("#hidtiles .deskcontainer").each(function (i, e) {
             var position = $(this).attr("ng-reflect-prev-position");
             if (position && position != "0") {
@@ -314,7 +314,7 @@ export class ClassDetailComponent implements OnInit, AfterContentInit {
             }
         });
 
-        //move
+        // moved
         $(".desktile .deskcontainer[ng-reflect-prev-position]").each(function (i, e) {
             var prevPosition = $(this).attr("ng-reflect-prev-position");
             if (prevPosition == $(this).attr("ng-reflect-position")) {
@@ -394,7 +394,6 @@ export class ClassDetailComponent implements OnInit, AfterContentInit {
             detail.dragId = "";
         });
 
-        //The dragover
         $("#dvright").on('dragover', function (evt) {
             evt.preventDefault();
         });

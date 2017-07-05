@@ -115,11 +115,11 @@ export class AdminService {
                     const authHeaders = { headers: headers };
                     this.getServicePrincipal(authHeaders).then((servicePrincipal) => {
                         if (!servicePrincipal) {
-                            reject("Could not found the service principal. Please provdie the admin consent.");
+                            reject("Could not found the service principal. Please provide the Admin Consent.");
                         }
                         else {
                             this.addAppRoleAssignmentForUsers(authHeaders, null, servicePrincipal, new Array<Promise<any>>()).then((count) => {
-                                const message = count == -1 ? "There're no users in your tanent." : (count > 0 ? `User access was successfully enabled for ${count} users.` : "User access was enabled for all users.");
+                                const message = count == -1 ? "There is no user in your tenant." : (count > 0 ? `User access was successfully enabled for ${count} users.` : "User access was enabled for all users.");
                                 resolve(message);
                             }).catch(() => reject(errorMessage));
                         }

@@ -4,7 +4,7 @@ In this sample, we show you how to integrate with school roles/roster data as we
 
 School data is kept in sync in O365 Education tenants by [Microsoft School Data Sync](http://sds.microsoft.com).  
 
-**Table of contents**
+**Table of Contents**
 
 - [Sample Goals](#sample-goals)
 - [Prerequisites](#prerequisites)
@@ -32,7 +32,7 @@ The sample demonstrates:
 
   - [Office 365 Schools REST API reference](https://msdn.microsoft.com/office/office365/api/school-rest-operations)
 
-EDUGraphAPI is based on NodeJS (the server side) and Angular 2 (the client side).
+EDUGraphAPI is based on NodeJS (the server-side) and Angular 2 (the client-side).
 
 ## Prerequisites
 
@@ -40,7 +40,7 @@ EDUGraphAPI is based on NodeJS (the server side) and Angular 2 (the client side)
 
 - An Azure subscription with permissions to register a new application, and deploy the web app.
 
-- An O365 Education tenant with Microsoft School Data Sync enabled
+- An O365 Education tenant with Microsoft School Data Sync enabled.
 
   - One of the following browsers: Edge, Internet Explorer 9, Safari 5.0.6, Firefox 5, Chrome 13, or a later version of one of these browsers.
 
@@ -74,7 +74,7 @@ Create a key to enable Bing Maps API features in the app:
 
 ## Register the application in Azure Active Directory
 
-1. Sign into the new azure portal: [https://portal.azure.com/](https://portal.azure.com/).
+1. Sign into the new Azure Portal: [https://portal.azure.com/](https://portal.azure.com/).
 
 2. Choose your Azure AD tenant by selecting your account in the top right corner of the page:
 
@@ -140,7 +140,7 @@ The following tools are also required:
 
 Debug the **EDUGraphAPI.Web**:
 
-1. Configure **Environment Variables**. Right click the project in Solution Explorer, then click **Properties**.
+1. Configure **Environment Variables**. Right-click the project in Solution Explorer, then click **Properties**.
 
    ![](/Images/web-app-properties.png)
 
@@ -149,7 +149,7 @@ Debug the **EDUGraphAPI.Web**:
    - **BingMapKey**: use the key of Bing Map you got earlier. This setting is optional.
    - **SourceCodeRepositoryURL**: use the repository URL of your fork.
 
-2. In the Solution Explorer, right click **npm**, then click **Install Missing npm Packages**:
+2. In the Solution Explorer, right-click **npm**, then click **Install Missing npm Packages**:
 
    ![](/Images/install-missing-npm-packages.png)
 
@@ -203,7 +203,7 @@ Debug the **EDUGraphAPI.Web**:
 
    - **Resource group**: we suggest you create a new group.
 
-   - **Site Name**: please input a name. Like EDUGraphAPICanviz or EDUGraphAPI993.
+   - **Site Name**: please input a name. Like EDUGraphAPITest003 or EDUGraphAPI993.
 
      > Note: If the name you input is taken, you will get some validation errors:
      >
@@ -239,7 +239,7 @@ Debug the **EDUGraphAPI.Web**:
 
    Copy the URL aside and change the schema to **https**. This is the replay URL and will be used in next step.
 
-3. Navigate to the app registration in the new azure portal, then open the setting windows.
+3. Navigate to the app registration in the new Azure Portal, then open the setting windows.
 
    Add the reply URL:
 
@@ -259,7 +259,7 @@ Debug the **EDUGraphAPI.Web**:
 
 The top layer of the solution contains the two parts of the EDUGraphAPI.Web project:
 
-* The server side Node.js app.
+* The server-side Node.js app.
 * The client side Angular 2 app.
 
 The bottom layers contain the three data sources.
@@ -270,7 +270,7 @@ The bottom layers contain the three data sources.
 
 ### **EDUGraphAPI.Web - Server**
 
-The server side app is based on Node.js and implemented with Typescript.
+The server-side app is based on Node.js and implemented with Typescript.
 
 **Authentication Mechanisms**
 
@@ -320,7 +320,7 @@ You will find the **DbContext** class and related model interfaces in the **/dat
 
 **Services**
 
-The services used by the server side app:
+The services used by the server-side app:
 
 | Service           | Description                              |
 | ----------------- | ---------------------------------------- |
@@ -346,7 +346,7 @@ For more information, see [Build a multi-tenant SaaS web application using Azure
 
 ### **EDUGraphAPI.Web - Client**
 
-The client side app which resides in the /app folder is based on Angular 2 and is also implemented with Typescript 2.
+The client-side app which resides in the /app folder is based on Angular 2 and is also implemented with Typescript 2.
 
 > Note:  Getting and using declaration files in TypeScript 2.0 is much easier than in TypeScript 1. To get declarations for a library like lodash for example, all you need is npm:
 >
@@ -450,11 +450,11 @@ Below are some screenshots of the sample app that show the education data.
 
 In **/app/services/dataService.ts**, three generic methods simplify the invoking of REST APIs.
 
-* **getObject<T>**: sends a http GET request to the target endpoint, and deserializes the JSON response string to T, and return the result object.  
-* **getPagedCollection<T>**:  sends a http GET request to the target endpoint, and deserializes the JSON response string to PagedCollection<T>, and return the result object. 
-* **getArray<T>**: sends a http GET request to the target endpoint, and deserializes the JSON response string to array, and return the array.
+* **getObject<T>**: sends an HTTP GET request to the target endpoint, and deserializes the JSON response string to T, and return the result object.  
+* **getPagedCollection<T>**:  sends an HTTP GET request to the target endpoint, and deserializes the JSON response string to PagedCollection<T>, and return the result object. 
+* **getArray<T>**: sends an HTTP GET request to the target endpoint, and deserializes the JSON response string to an array, and return the array.
 
-For http GET request sent by the 3 methods above, an access token is included in the bearer authentication header.
+For HTTP GET request sent by the 3 methods above, an access token is included in the bearer authentication header.
 
 ### Authentication Flows
 
@@ -474,7 +474,7 @@ The first 2 flows (Local Login/O365 Login) enable users to login in with either 
 
 This flow shows how an administrator logs into the system and performs administrative operations.
 
-After logging into the app with an office 365 account,the administrator will be asked to link to a local account. This step is not required and can be skipped. 
+After logging into the app with an office 365 account, the administrator will be asked to link to a local account. This step is not required and can be skipped. 
 
 As mentioned earlier, the web app is a multi-tenant app which uses some application permissions, so tenant administrator must consent the app first.  
 

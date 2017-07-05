@@ -21,18 +21,10 @@ export class AboutMeService {
         @Inject('data') private dataService: DataService) {
     }
 
-    /**
-     * Get current users's classes.
-     * Reference URL: 
-     */
     getMe(): any {
         return this.meService.getCurrentUser();
     }
 
-    /**
-     * Get current users's classes.
-     * Reference URL: 
-     */
     getMyClasses(): any {
         return this.dataService.get(this.graphUrlBase + "/me/memberOf?api-version=1.5")
             .map((response: Response): ClassesModel[] => {
@@ -47,10 +39,6 @@ export class AboutMeService {
             });
     }
 
-    /**
-     * Get current users's classes.
-     * Reference URL: 
-     */
     updateFavoriteColor(color: string): Promise<any> {
         return this.meService.updateFavoriteColor(color);
     }

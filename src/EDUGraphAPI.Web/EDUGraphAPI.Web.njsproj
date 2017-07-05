@@ -220,7 +220,6 @@ SQLiteDB=database.sqlite</Environment>
     <Content Include="Index.html" />
     <Content Include="package.json" />
     <Content Include="public\favicon.ico" />
-    <Content Include="README.md" />
     <Content Include="ssl\cert.pem" />
     <Content Include="ssl\csr.pem" />
     <Content Include="ssl\key.pem" />

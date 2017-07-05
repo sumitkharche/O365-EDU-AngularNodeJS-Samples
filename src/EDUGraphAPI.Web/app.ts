@@ -27,7 +27,7 @@ var adminRoute = require("./routes/admin");
 
 var app = express();
 
-// AAD/Local authentication
+// Authentication
 var auth = new appAuth(app);
 
 // Angular 2
@@ -42,9 +42,7 @@ app.get("/systemjs.config.js", function (req, res) {
     res.sendfile(path.join(__dirname, 'systemjs.config.js'));
 });
 
-//-----------------------------------------------------------------------------
-// Config the app, include middlewares
-//-----------------------------------------------------------------------------
+// Config the app
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(cookieSession({
@@ -57,7 +55,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 
-// Initialize Passport!  Also use passport.session() middleware, to support
+// Initialize Passport
 auth.initPassport(app);
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -71,9 +69,10 @@ app.use('/api/link', auth.ensureAuthenticated, linkRoute);
 app.use('/api/tenant', auth.ensureAuthenticated, tenantRoute);
 app.use('/api/admin', adminRoute);
 
-//configure aad/local auth route
+// Configure auth route
 auth.initAuthRoute(app);
 
+// Pass constants to client side through cookie
 var indexPage = app.get('env') === 'development' ? 'index.html' : 'index.prod.html';
 app.get('/*', function (req, res) {
     if (req.cookies['AppClientId'] == null || req.cookies['AppClientId'] != process.env.clientId) {
@@ -91,16 +90,14 @@ app.get('/*', function (req, res) {
     res.sendfile(path.join(__dirname, indexPage));
 });
 
-// catch 404 and forward to error handler
+// Catch 404 and forward to error handler
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err['status'] = 404;
     next(err);
 });
 
-// error handlers
-// development error handler
-// will print stacktrace
+// Handle errors
 if (app.get('env') === 'development') {
     app.use(function (err, req, res, next) {
         res.status(err['status'] || 500);
@@ -111,8 +108,6 @@ if (app.get('env') === 'development') {
     });
 }
 
-// production error handler
-// no stacktraces leaked to user
 app.use(function (err, req, res, next) {
     res.status(err['status'] || 500);
     res.render('error', {
@@ -121,11 +116,11 @@ app.use(function (err, req, res, next) {
     });
 });
 
-// database
+// Sync database
 var db = new dbContext_1.DbContext();
 db.sync({ force: false }).then(function () { });
 
-// create server
+// Create server
 var port = process.env.port || 1337;
 if (app.get('env') === 'development') {
     https.createServer({

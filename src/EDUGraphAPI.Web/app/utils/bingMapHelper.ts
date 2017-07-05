@@ -12,7 +12,6 @@ export class BingMapHelper {
 
     /**
      * Retrieves longitude and latitude by address.
-     * Reference URL: 
      */
     public static getLatitudeAndLongitude(state: string, city: string, address: string): Promise<any> {
         return new Promise((resolve, reject) => {

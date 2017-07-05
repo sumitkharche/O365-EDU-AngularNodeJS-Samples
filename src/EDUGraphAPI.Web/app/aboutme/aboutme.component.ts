@@ -64,7 +64,7 @@ export class AboutMe implements OnInit {
                 } else {
                     this.userRole = "Admin";
                 }
-                
+
                 if (user.o365UserId) {
                     this.userPhotoService.getUserPhotoUrl(user.o365UserId)
                         .then(url => this.userPhoto = url);

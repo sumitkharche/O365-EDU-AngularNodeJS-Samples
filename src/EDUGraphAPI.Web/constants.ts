@@ -19,39 +19,12 @@ export class Constants {
     public static readonly SourceCodeRepositoryUrl: string = process.env.sourceCodeRepositoryUrl as string;
 
     public static readonly AADCompanyAdminRoleName: string = "Company Administrator";
-
-    //Required, must be 'code', 'code id_token', 'id_token code' or 'id_token' 
-    public static readonly ResponseType: string = 'code';
-
-    // Required
-    public static readonly ResponseMode: string = 'form_post';
-
-    // Required, the reply URL registered in AAD for your app
-    public static readonly RedirectUrl: string = '/auth/openid/return';
-
-    // Required if we use http for redirectUrl
-    public static readonly AllowHttpForRedirectUrl: boolean = true;
-
-    // Required  to set to false if you don't want to validate issuer
-    public static readonly ValidateIssuer: boolean = false;
-
-    // Required to set to true if the `verify` function has 'req' as the first parameter
-    public static readonly PassReqToCallback: boolean = true;
-
-    // Optional, 'error', 'warn' or 'info'
-    public static readonly LoggingLevel: string = 'info';
-
-    // Optional. The lifetime of nonce in session, the default value is 3600 (seconds).
-    public static readonly NonceLifetime: number = null;
-
-    // The url you need to go to destroy the session with AAD
-    public static readonly DestroySessionUrl: string = Constants.Authority + 'oauth2/logout?post_logout_redirect_uri=';
-
+      
     // Cookie names
     public static readonly O365Username = "O365Username";
     public static readonly O365Email = "O365Email";
 
-    // SQL config 
+    // Database 
     public static readonly SQLiteDB: string = process.env.SQLiteDB as string;
 }
 
