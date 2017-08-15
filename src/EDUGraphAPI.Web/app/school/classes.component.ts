@@ -95,7 +95,7 @@ export class ClassesComponent implements OnInit {
             .getClasses(this.schoolId, this.nextLink)
             .subscribe((result) => {
                 this.isGettingData = false;
-                this.nextLink = result["odata.nextLink"];
+                this.nextLink = result["@odata.nextLink"];
                 if (this.classesArray === undefined) {
                     this.classesArray = [];
                 }
@@ -122,8 +122,7 @@ export class ClassesComponent implements OnInit {
                                     });
                                     this.myClassesArray.push(classObj);
                                     this.classesArray.forEach((objofAllClasses) => {
-                                        if (classObj.ObjectId == objofAllClasses.ObjectId &&
-                                            classObj.ObjectType == "Group" && classObj.EducationObjectType == "Section") {
+                                        if (classObj.ObjectId == objofAllClasses.ObjectId && classObj.EducationObjectType == "Section") {
                                             objofAllClasses.IsMyClasses = true;
                                             objofAllClasses.Users = classObj.Users;
                                         }

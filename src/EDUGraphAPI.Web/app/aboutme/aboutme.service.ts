@@ -14,7 +14,7 @@ import { DataService } from "../services/dataService";
 @Injectable()
 export class AboutMeService {
 
-    private graphUrlBase: string = Constants.AADGraphResource + '/' + Constants.TenantId;
+    private graphUrlBase: string = Constants.MSGraphResource + '/v1.0';
 
     constructor(private http: Http,
         @Inject('me') private meService: MeService,
@@ -26,12 +26,12 @@ export class AboutMeService {
     }
 
     getMyClasses(): any {
-        return this.dataService.get(this.graphUrlBase + "/me/memberOf?api-version=1.5")
+        return this.dataService.get(this.graphUrlBase + "/me/memberOf")
             .map((response: Response): ClassesModel[] => {
                 var classes: ClassesModel[] = new Array<ClassesModel>();
                 var groups: any[] = <any[]>response.json().value;
                 groups.forEach((group) => {
-                    if (group["objectType"] === "Group" && group["extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType"] === "Section") {
+                    if (group["extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType"] === "Section") {
                         classes.push(group);
                     }
                 });

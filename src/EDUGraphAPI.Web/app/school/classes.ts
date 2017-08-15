@@ -7,11 +7,8 @@ import { UserModel } from './user'
 
 export class ClassesModel {
 
-    @JsonProperty("objectId")
+    @JsonProperty("id")
     public ObjectId: string;
-
-    @JsonProperty("objectType")
-    public ObjectType: string;
 
     @JsonProperty("extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType")
     public EducationObjectType: string;
@@ -96,7 +93,6 @@ export class ClassesModel {
     constructor() {
         this.DisplayName = undefined;
         this.ObjectId = undefined;
-        this.ObjectType = undefined;
         this.EducationObjectType = undefined;
         this.Email = undefined;
         this.SecurityEnabled = undefined;

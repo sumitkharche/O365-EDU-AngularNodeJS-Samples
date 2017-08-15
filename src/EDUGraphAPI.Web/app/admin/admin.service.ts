@@ -18,7 +18,7 @@ import { DataService } from "../services/dataService";
 @Injectable()
 export class AdminService {
 
-    private getMeUrl = Constants.AADGraphResource + '/' + Constants.TenantId + "/me?api-version=1.5";
+    private getMeUrl = Constants.MSGraphResource + '/v1.0/me';
     private getAdminUrl = '/api/me';
     private aadBaseUrl = Constants.AADGraphResource + '/' + Constants.TenantId;
 
@@ -130,6 +130,15 @@ export class AdminService {
         });
     }
 
+    clearUserTokenCache(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this._http.post("api/admin/clearusertokencache", {})
+                .subscribe((response: Response) => {
+                    resolve(response.ok);
+                }
+                , (error) => reject(error))
+        });
+    }
     private getAADGraphToken(): Promise<string> {
         return new Promise((resolve, reject) => {
             this.authService.getAADGraphToken().subscribe(
@@ -209,7 +218,6 @@ export class AdminService {
         const userId = user.objectId;
         const body = {
             "odata.type": "Microsoft.DirectoryServices.AppRoleAssignment",
-            "creationTimestamp": new Date().toISOString(),
             "principalDisplayName": user.displayName,
             "principalId": user.objectId,
             "principalType": "User",
@@ -220,7 +228,9 @@ export class AdminService {
             .subscribe((response: Response) => {
                 resolve(response.json());
             },
-            (error) => reject(error));
+            (error) => {
+                resolve(null);
+            });
     }
 
     private addAppRoleAssignment(authHeaders: RequestOptionsArgs, user: any, servicePrincipal: any, nextLink: string): Promise<boolean> {

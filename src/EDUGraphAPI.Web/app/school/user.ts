@@ -21,7 +21,7 @@ export class UserModel {
     @JsonProperty("extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId")
     public SchoolId: string;
 
-    @JsonProperty("objectId")
+    @JsonProperty("id")
     public O365UserId: string;
 
     @JsonProperty("extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_TeacherId")

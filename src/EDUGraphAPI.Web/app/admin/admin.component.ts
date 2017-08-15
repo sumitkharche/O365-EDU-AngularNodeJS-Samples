@@ -75,7 +75,13 @@ export class AdminComponent implements OnInit {
             this.error = message;
         });
     }
-
+    clearAdalCache() {
+        this.adminService.clearUserTokenCache().then(() => {
+            this.message = 'Login cache cleared successfully!';
+        }).catch(() => {
+            this.error = 'Login cache cleared Failure.';
+        });
+    }
     private initMessage() {
         var error_description = UrlHelper.getHashValue('error_description');
         if (error_description && error_description.length > 0) {

@@ -8,6 +8,8 @@ import { MSGraphClient } from '../services/msGraphClient';
 import { Constants } from '../constants';
 import { OrganizationInstance } from '../data/dbContext';
 import { AuthenticationHelper } from '../utils/authenticationHelper';
+import { TokenCacheService } from '../services/TokenCacheService';
+
 import jwt = require('jsonwebtoken');
 
 var router = express.Router();
@@ -86,6 +88,20 @@ router.post('/consented', function (req, res, next) {
             }
             else
                 res.redirect(redirectUrl);
+        });
+})
+router.post('/clearusertokencache', function (req, res) {
+    //var redirectUrl = req.query.redirectUrl || '/schools';
+    res.clearCookie('authType');
+    req.session = null;
+
+    let tokenService = new TokenCacheService();
+    tokenService.clearUserTokenCache()
+        .then(() => {
+            res.json(200)
+        })
+        .catch(error => {
+            res.json(500, { error: error })
         });
 })
 

@@ -45,7 +45,7 @@
             <div class="section-tiles">
                 <div class="nodata" *ngIf="showNoData"> {{noDataText}}</div>
                 <div class="content clearfix" *ngIf="classesArray">
-                    <div class="tile-container" *ngFor="let classEntity of classesArray" on-mouseover='showDetail(classEntity)' on-mouseout=" hideDetail(classEntity)">
+                    <div class="tile-container" *ngFor="let classEntity of classesArray" on-mouseover='showDetail(classEntity)' on-mouseout='hideDetail(classEntity)'>
                         <a class="mysectionlink" (click)="gotoDetail(classEntity.ObjectId);false">
                             <div class="tile">
                                 <h5>{{classEntity.DisplayName}}</h5>

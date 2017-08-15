@@ -53,23 +53,6 @@ EDUGraphAPI is based on NodeJS (the server-side) and Angular 2 (the client-side)
   - [Git](https://git-scm.com/download/win)
   - Familiarity with Node.js, TypeScript, Angular and web services.
 
-**Optional configuration**:
-
-A feature in this sample demonstrates calling the Bing Maps API which requires a key to enable the Bing Maps feature. 
-
-Create a key to enable Bing Maps API features in the app:
-
-1. Open [https://www.bingmapsportal.com/](https://www.bingmapsportal.com/) in your web browser and sign in.
-
-2. Click  **My account** -> **My keys**.
-
-3. Create a **Basic** key, select **Public website** as the application type.
-
-4. Copy the **Key** and save it. 
-
-   ![](Images/bing-maps-key.png)
-
-   > **Note:** The key is used in the app configuration steps for debug and deploy.
 
 
 ## Register the application in Azure Active Directory
@@ -112,7 +95,7 @@ Create a key to enable Bing Maps API features in the app:
 
      | API                            | Application Permissions | Delegated Permissions                    |
      | ------------------------------ | ----------------------- | ---------------------------------------- |
-     | Microsoft Graph                |                         | Read all users' full profiles<br>Read all groups<br>Read directory data<br>Access directory as the signed in user<br>Sign users in |
+     | Microsoft Graph                | Read directory data     | Read all users' full profiles<br>Read directory data<br>Read directory data<br>Access directory as the signed in user<br>Sign users in |
      | Windows Azure Active Directory |                         | Sign in and read user profile<br>Read and write directory data |
 
      ![](/Images/aad-create-app-06.png)
@@ -146,7 +129,6 @@ Debug the **EDUGraphAPI.Web**:
 
    - **clientId**: use the Client Id of the app registration you created earlier.
    - **clientSecret**: use the Key value of the app registration you created earlier.
-   - **BingMapKey**: use the key of Bing Map you got earlier. This setting is optional.
    - **SourceCodeRepositoryURL**: use the repository URL of your fork.
 
 2. In the Solution Explorer, right-click **npm**, then click **Install Missing npm Packages**:
@@ -220,8 +202,6 @@ Debug the **EDUGraphAPI.Web**:
    - **Client Id**: use the Client Id of the app registration you created earlier.
 
    - **Client Secret**: use the Key value of the app registration you created earlier.
-
-   - **Bing Map Key**: use the key of Bing Map you got earlier. This setting is optional. It will hide Bing map icon on schools page if this field is empty.
 
    - Check **I agree to the terms and conditions stated above**.
 
@@ -404,13 +384,13 @@ The **EducationServiceClient** is the core class of the library. It is used to e
 
 ~~~typescript
 getSchools(): Observable<any[]> {
-    return this.dataService.getArray<any>(this.urlBase + "/administrativeUnits?api-version=beta");
+    return this.dataService.getArray<any>(this.urlBase + "/administrativeUnits");
 }
 ~~~
 
 ~~~typescript
 getSchoolById(id: string): Observable<any> {
-    return this.dataService.getObject(this.urlBase + '/administrativeUnits/' + id + '?api-version=beta');
+    return this.dataService.getObject(this.urlBase + '/administrativeUnits/' + id );
 }
 ~~~
 
@@ -418,23 +398,22 @@ getSchoolById(id: string): Observable<any> {
 
 ~~~typescript
 getClasses(schoolId: string, nextLink: string): Observable<PagedCollection<any>> {
-    let url: string = this.urlBase + "/groups?api-version=beta&$top=12&$filter=extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20'Section'%20and%20extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20'" + schoolId + "'" +
-        (nextLink ? "&" + GraphHelper.getSkipToken(nextLink) : '');
+    let url: string = this.urlBase + "/groups?$top=12&$filter=extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20'Section'%20and%20extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20'" + schoolId + "'" + (nextLink ? "&" + GraphHelper.getSkipToken(nextLink) : '');
     return this.dataService.getPagedCollection<any>(url);
 }
 ~~~
 
 ```typescript
 getClassById(classId: string): Observable<any> {
-    return this.dataService.getObject<any>(this.urlBase + "/groups/" + classId + "?api-version=beta&$expand=members");
+    return this.dataService.getObject<any>(this.urlBase + "/groups/" + classId + "?$expand=members");
 }
 ```
 **Get users**
 
 ```typescript
 getUsers(schoolId: string, nextLink: string): Observable<PagedCollection<any>> {
-    var url = this.urlBase + "/administrativeUnits/" + schoolId + "/members?api-version=beta&$top=12" +
-        (nextLink ? "&" + GraphHelper.getSkipToken(nextLink) : '');
+    var url = this.urlBase + "/administrativeUnits/" + schoolId + "/members?$top=12" +
+  (nextLink ? "&" + GraphHelper.getSkipToken(nextLink) : '');
     return this.dataService.getPagedCollection<any>(url);
 }
 ```
@@ -519,7 +498,7 @@ Note that in the AAD Application settings, permissions for each Graph API are co
 
 ## Questions and comments
 
-- If you have any trouble running this sample, please [log an issue](https://github.com/OfficeDev/O365-EDU-AngularJS-Samples/issues).
+- If you have any trouble running this sample, please [log an issue](https://github.com/OfficeDev/O365-EDU-AspNetMVC-Samples/issues).
 - Questions about GraphAPI development in general should be posted to [Stack Overflow](http://stackoverflow.com/questions/tagged/office-addins). Make sure that your questions or comments are tagged with [ms-graph-api]. 
 
 ## Contributing

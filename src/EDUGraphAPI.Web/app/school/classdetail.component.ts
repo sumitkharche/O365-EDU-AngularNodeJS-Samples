@@ -101,8 +101,8 @@ export class ClassDetailComponent implements OnInit, AfterContentInit {
                                     .getClassById(this.classObjectId)
                                     .subscribe((result) => {
                                         this.classEntity = MapUtils.deserialize(ClassesModel, result);
-                                        this.classEntity.TermStartDate = moment.utc(this.classEntity.TermStartDate).local().format('MMM  YYYY');
-                                        this.classEntity.TermEndDate = moment.utc(this.classEntity.TermEndDate).local().format('MMM YYYY');
+                                        this.classEntity.TermStartDate = moment.utc(this.classEntity.TermStartDate).local().format('MMMM  D YYYY');
+                                        this.classEntity.TermEndDate = moment.utc(this.classEntity.TermEndDate).local().format('MMMM  D YYYY');
                                         this.classEntity.IsMyClasses = true;
                                         this.classEntity.Users = [];
                                         this.schoolService
@@ -493,7 +493,7 @@ export class ClassDetailComponent implements OnInit, AfterContentInit {
                 $("#studoc .table-green-header th:eq(3)").addClass("headerSortUp");
                 this.sortDocAsc = true;
             }
-            var sort = CompareHelper.createComparer("lastModifiedDateTime", this.sortDocAsc);
+            var sort = CompareHelper.createDateComparer("lastModifiedDateTime", this.sortDocAsc);
             this.documents.sort(sort);
         }
         else {

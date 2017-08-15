@@ -143,10 +143,9 @@ textarea {
 .sectionschoolname{font-size:24px;color:#666565;padding-left: 0;}
 .mysection{text-align:right;padding-top: 10px;width:100%;}
 .tophero{background-color:#f8f8f8;padding-left:0px;}
-#myMap{position:absolute;}
-.bingMapLink{margin-left:12px;}
+
 .schooladdress{width:auto;float:left;}
-.schoolmap{float:left;}
+/*.schoolmap{float:left;}*/
 .toptiles{
     padding: 10px 0 15px 0;
     border: 1px solid #237e17;

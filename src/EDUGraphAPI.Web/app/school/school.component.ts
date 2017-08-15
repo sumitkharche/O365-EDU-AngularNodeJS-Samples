@@ -10,7 +10,6 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SchoolModel } from './school'
 import { SchoolService } from './school.service';
-import { BingMapHelper } from '../utils/bingMapHelper'
 import { MapUtils } from '../utils/jsonHelper'
 import { UserModel } from './user'
 import { Constants } from '../constants';
@@ -20,9 +19,7 @@ import { Cookie } from '../services/cookieService';
 @Component({
     moduleId: module.id,
     selector: 'schools-list',
-    host: {
-        '(document:click)': 'showMap($event)',
-    },
+    host: {},
     templateUrl: 'school.component.template.html',
     styleUrls: []
 })
@@ -65,10 +62,6 @@ export class SchoolComponent implements OnInit {
                             if (!school.PrincipalName || school.PrincipalName == "") {
                                 school.PrincipalName = "-";
                             }
-                            BingMapHelper.getLatitudeAndLongitude(school.State, school.City, school.Address).then((location) => {
-                                school.Latitude = location.Latitude;
-                                school.Longitude = location.Longitude;
-                            });
                         });
                         this.schools.sort((n1, n2) => {
                             if (n1.IsMySchool) {
@@ -108,34 +101,4 @@ export class SchoolComponent implements OnInit {
         }, 100);
     }
 
-    showMap(event) {
-        const target = event.target || event.srcElement || event.currentTarget;
-        if ($(target).closest("#myMap").length == 1) {
-            return;
-        }
-
-        const element = $(target).closest("a.bingMapLink");
-        const myMap = $(".schools #myMap");
-        if (element.length == 0) {
-            myMap.offset({ top: 0, left: 0 }).hide();
-            return;
-        }
-
-        const latitude: string = element.attr("latitude");
-        const longitude: string = element.attr("longitude");
-        if (latitude && longitude) {
-            var map = new Microsoft.Maps.Map(myMap[0], {
-                credentials: Constants.BingMapKey,
-                center: new Microsoft.Maps.Location(latitude, longitude),
-                mapTypeId: Microsoft.Maps.MapTypeId.road,
-                showMapTypeSelector: false,
-                zoom: 10
-            });
-            var pushpin = new Microsoft.Maps.Pushpin(map.getCenter(), null);
-            map.entities.push(pushpin);
-
-            var offset = element.offset();
-            myMap.offset({ top: offset.top - 50, left: offset.left + 50 }).css({ width: "200px", height: "200px" }).show();
-        }
-    }
 }

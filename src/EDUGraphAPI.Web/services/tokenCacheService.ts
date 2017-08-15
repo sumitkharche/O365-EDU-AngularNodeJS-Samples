@@ -46,4 +46,15 @@ export class TokenCacheService {
             accessTokens: JSON.stringify(accessTokens)
         })
     }
+
+    public clearUserTokenCache(): Promise<any> {
+        return this.dbContext.TokenCache.all()
+            .then(caches => {
+                let promises = new Array<Promise<any>>();
+                caches.forEach(cach => {
+                    promises.push(cach.destroy());
+                })
+                return Promise.all(promises);
+            });
+    }
 }

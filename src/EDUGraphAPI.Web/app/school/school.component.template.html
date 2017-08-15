@@ -40,9 +40,6 @@
                             <br *ngIf="item.City" />
                             {{item.CompoundAddress }}
                         </div>
-                        <div class="schoolmap" *ngIf="item.CompoundAddress !='-' && showBingMapIcon">
-                            <a class="bingMapLink" href="javascript:void(0)" [attr.longitude]="item.Longitude" [attr.latitude]="item.Latitude"><img [src]="item.IsMySchool ? '/app/Images/icon-map_30x28px-WHT.png' : '/app/Images/icon-map_30x28px-BLU.png'"></a>
-                        </div>
                     </td>
                     <td>
                         <a class="btnlink" (click)="gotoClasses(item);false">Classes</a>

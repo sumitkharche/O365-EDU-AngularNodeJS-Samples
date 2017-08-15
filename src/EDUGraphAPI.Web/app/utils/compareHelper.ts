@@ -2,7 +2,14 @@
 * Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
 * See LICENSE in the project root for license information.
 */
+import * as moment from 'moment';
+
 export class CompareHelper {
+
+    public static createDateComparer(propertyName: string, desc: boolean = false): (a: any, b: any) => number {
+        var propertySelector = t => moment(t[propertyName], 'MM/DD/YYYY hh: mm: ss A');
+        return this.createComparer2(propertySelector, desc);
+    }
 
     public static createComparer(propertyName: string, desc: boolean = false): (a: any, b: any) => number {
         var propertySelector = t => t[propertyName];

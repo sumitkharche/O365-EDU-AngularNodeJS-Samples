@@ -9,11 +9,8 @@ export class SchoolModel {
     @JsonProperty("extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId")
     public SchoolId: string;
 
-    @JsonProperty("objectId")
+    @JsonProperty("id")
     public ObjectId: string;
-
-    @JsonProperty("objectType")
-    public ObjectType: string;
 
     @JsonProperty("displayName")
     public DisplayName: string;
@@ -57,10 +54,6 @@ export class SchoolModel {
     @JsonProperty("extension_fe2174665583431c953114ff7268b7b3_Education_StateId")
     public StateId: string;
 
-    public Latitude: string;
-
-    public Longitude: string;
-
     public IsMySchool: boolean = false;
 
     public get CompoundAddress(): string {
@@ -80,7 +73,6 @@ export class SchoolModel {
     constructor() {
         this.SchoolId = undefined;
         this.ObjectId = undefined;
-        this.ObjectType = undefined;
         this.DisplayName = undefined;
         this.PrincipalName = undefined;
         this.Description = undefined;

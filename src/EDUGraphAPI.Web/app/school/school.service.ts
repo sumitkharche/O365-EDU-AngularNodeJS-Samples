@@ -21,7 +21,7 @@ import { AuthHelper } from "../authHelper/authHelper";
 export class SchoolService {
 
     private files = [];
-    private urlBase: string = Constants.AADGraphResource + '/' + Constants.TenantId;
+    private urlBase: string = Constants.MSGraphResource + '/beta';
 
     constructor(
         private http: Http,
@@ -34,7 +34,7 @@ export class SchoolService {
      * Reference URL: https://msdn.microsoft.com/office/office365/api/school-rest-operations#get-all-schools
      */
     getSchools(): Observable<any[]> {
-        return this.dataService.getArray<any>(this.urlBase + "/administrativeUnits?api-version=beta");
+        return this.dataService.getArray<any>(this.urlBase + "/administrativeUnits");
     }
 
     /**
@@ -43,7 +43,7 @@ export class SchoolService {
      * Reference URL: https://msdn.microsoft.com/office/office365/api/school-rest-operations#get-a-school.
 	 */
     getSchoolById(id: string): Observable<any> {
-        return this.dataService.getObject(this.urlBase + '/administrativeUnits/' + id + '?api-version=beta');
+        return this.dataService.getObject(this.urlBase + '/administrativeUnits/' + id );
     }
     /**
      * Retrieves classes of a school
@@ -52,7 +52,7 @@ export class SchoolService {
      * Reference URL: https://msdn.microsoft.com/office/office365/api/school-rest-operations#get-sections-within-a-school.
      */
     getClasses(schoolId: string, nextLink: string): Observable<PagedCollection<any>> {
-        let url: string = this.urlBase + "/groups?api-version=beta&$top=12&$filter=extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20'Section'%20and%20extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20'" + schoolId + "'" +
+        let url: string = this.urlBase + "/groups?$top=12&$filter=extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20'Section'%20and%20extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20'" + schoolId + "'" +
             (nextLink ? "&" + GraphHelper.getSkipToken(nextLink) : '');
         return this.dataService.getPagedCollection<any>(url);
     }
@@ -61,7 +61,7 @@ export class SchoolService {
      * Reference URL: https://msdn.microsoft.com/en-us/office/office365/api/teacher-rest-operations
      */
     getMe(): Observable<any> {
-        return this.dataService.getObject<any>(this.urlBase + "/me?api-version=1.5");
+        return this.dataService.getObject<any>(this.urlBase + "/me");
     }
 
     /**
@@ -69,7 +69,7 @@ export class SchoolService {
      * Reference URL: https://msdn.microsoft.com/en-us/office/office365/api/section-rest-operations
      */
     getMyClasses(schoolId: string): Observable<any[]> {
-        return this.dataService.getArray<any>(this.urlBase + "/me/memberOf?api-version=1.5");
+        return this.dataService.getArray<any>(this.urlBase + "/me/memberOf");
     }
 
     /**
@@ -78,7 +78,7 @@ export class SchoolService {
      * @param classId The Object ID of the section
      */
     getClassById(classId: string): Observable<any> {
-        return this.dataService.getObject<any>(this.urlBase + "/groups/" + classId + "?api-version=beta&$expand=members");
+        return this.dataService.getObject<any>(this.urlBase + "/groups/" + classId + "?$expand=members");
     }
 
     /**
@@ -86,7 +86,7 @@ export class SchoolService {
      * @param classId The Object ID of the section
      */
     getClassMembers(classId: string): Observable<PagedCollection<any>> {
-        return this.dataService.getPagedCollection<any>(this.urlBase + "/groups/" + classId + "/members?api-version=1.5");
+        return this.dataService.getPagedCollection<any>(this.urlBase + "/groups/" + classId + "/members");
     }
 
     /**
@@ -96,7 +96,7 @@ export class SchoolService {
      * Reference URL: https://msdn.microsoft.com/en-us/office/office365/api/school-rest-operations#get-school-members
      */
     getUsers(schoolId: string, nextLink: string): Observable<PagedCollection<any>> {
-        var url = this.urlBase + "/administrativeUnits/" + schoolId + "/members?api-version=beta&$top=12" +
+        var url = this.urlBase + "/administrativeUnits/" + schoolId + "/members?$top=12" +
             (nextLink ? "&" + GraphHelper.getSkipToken(nextLink) : '');
         return this.dataService.getPagedCollection<any>(url);
     }
@@ -109,7 +109,7 @@ export class SchoolService {
      */
     getStudents(schoolId: string, nextLink: string): Observable<PagedCollection<any>> {
         var url = this.urlBase +
-            "/users?api-version=1.5&$filter=extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20'" + schoolId +
+            "/users?$filter=extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20'" + schoolId +
             "'%20and%20extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20'Student'&$top=12" +
             (nextLink ? '&' + GraphHelper.getSkipToken(nextLink) : '');
         return this.dataService.getPagedCollection<any>(url);
@@ -122,7 +122,7 @@ export class SchoolService {
      * Reference URL: https://msdn.microsoft.com/en-us/office/office365/api/school-rest-operations#get-school-members
      */
     getTeachers(schoolId: string, nextLink: string): Observable<PagedCollection<any>> {
-        var url = this.urlBase + "/users?api-version=1.5&$filter=extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20'" + schoolId +
+        var url = this.urlBase + "/users?$filter=extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20'" + schoolId +
             "'%20and%20extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20'Teacher'&$top=12" +
             (nextLink ? '&' + GraphHelper.getSkipToken(nextLink) : '');
         return this.dataService.getPagedCollection<any>(url);

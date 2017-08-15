@@ -38,7 +38,7 @@ class UsersViewModel {
                     this.curPage += 1;
                 }
                 this.isGettingData = false;
-                this.nextLink = result["odata.nextLink"];
+                this.nextLink = result["@odata.nextLink"];
                 result.value.forEach((obj) => {
                     const model: UserModel = MapUtils.deserialize(UserModel, obj);
                     this.users.push(model);
