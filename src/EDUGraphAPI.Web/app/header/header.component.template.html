@@ -22,8 +22,8 @@
                     <a href="javascript:void(0);" id="userinfolink" (click)="showContextMenu(this)">
                         <span *ngIf="userRole"> Logged in as: {{userRole}}.</span> <span *ngIf="fullName">Hello {{fullName}}</span>
                         <img *ngIf="userPhoto" src="{{userPhoto}}">
+                        <span *ngIf="fullName" class="caret" id="caret" [class.transformcaret]="ifShowContextMenu"></span>
                     </a>
-                    <span *ngIf="fullName" class="caret" id="caret" [class.transformcaret]="ifShowContextMenu"></span>
                 </div>
                 <div class="" id="userinfoContainer" [hidden]="!ifShowContextMenu">
                     <div class="popuserinfo">

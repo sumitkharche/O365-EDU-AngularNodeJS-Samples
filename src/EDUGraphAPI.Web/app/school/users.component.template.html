@@ -30,7 +30,7 @@
             </div>
             <div class="col-md-6 filterlink-container">
                 <span>FILTER:</span>
-                <a id="filterteacher" class="filterlink" [class.selected]="view === 'teachers'" (click)="switchView('teachers')"> Teachers</a> | <a id="filterstudnet" class="filterlink" [class.selected]="view === 'students'" (click)="switchView('students')">Students</a> | <a id="filterall" class="filterlink" [class.selected]="view === 'users'" (click)="switchView('users')">All</a>
+                <a id="filterteacher" class="filterlink" [class.selected]="view === 'teachers'" (click)="switchView('teachers','#filterteacher')"> Teachers</a> | <a id="filterstudnet" class="filterlink" [class.selected]="view === 'students'" (click)="switchView('students','#filterstudent')">Students</a> | <a id="filterall" class="filterlink" [class.selected]="view === 'users'" (click)="switchView('users','#filterall')">All</a>
             </div>
         </div>
         <br style="clear:both;">

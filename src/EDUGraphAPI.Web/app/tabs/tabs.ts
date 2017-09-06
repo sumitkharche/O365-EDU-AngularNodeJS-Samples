@@ -24,7 +24,9 @@ export class Tabs implements AfterContentInit {
     }
 
     selectTab(tab: Tab) {
+        location.hash = tab.hash;
         this.tabs.toArray().forEach(tab => tab.active = false);
         tab.active = true;
+
     }
 }

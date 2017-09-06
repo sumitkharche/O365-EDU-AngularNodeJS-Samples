@@ -14,7 +14,16 @@ export class DemoHelperPage {
 }
 
 export class Link {
-
     title: string;
+    tab: string;
+    collapsed: boolean;
+    files: File[];
+}
+export class File {
     url: string;
+    methods: Method[];
+}
+export class Method {
+    title: string;
+    description: string;
 }

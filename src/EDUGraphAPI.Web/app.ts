@@ -78,9 +78,6 @@ app.get('/*', function (req, res) {
     if (req.cookies['AppClientId'] == null || req.cookies['AppClientId'] != process.env.clientId) {
         res.cookie('AppClientId', process.env.clientId);
     }
-    if (req.cookies['AppBingMapKey'] == null || req.cookies['AppBingMapKey'] != process.env.BingMapKey) {
-        res.cookie('AppBingMapKey', process.env.BingMapKey);
-    }
     if (req.cookies['SourceCodeRepositoryUrl'] == null || req.cookies['SourceCodeRepositoryUrl'] != process.env.SourceCodeRepositoryUrl) {
         res.cookie('SourceCodeRepositoryUrl', process.env.SourceCodeRepositoryUrl);
     }

@@ -5,7 +5,7 @@
 import { Component, Input, OnInit, Injectable, Inject } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Http } from '@angular/http';
-import { DemoHelperPage } from './demoHelperPage';
+import { DemoHelperPage, Link } from './demoHelperPage';
 import { DemoHelperService } from './demoHelperService';
 import { MapUtils } from '../utils/jsonhelper';
 
@@ -20,6 +20,7 @@ export class DemoHelper implements OnInit {
     HasDemo: boolean;
     DemoPage: DemoHelperPage;
     Collapsed: boolean;
+    LocationHash: string;
 
     constructor(
         private router: Router,
@@ -48,6 +49,11 @@ export class DemoHelper implements OnInit {
 
     showDemoHelper() {
         this.Collapsed = !(this.Collapsed);
+    }
+
+    showFunction(event, link:Link) {
+        event.stopPropagation();
+        link.collapsed = !link.collapsed;
     }
 
     getDemoPage() {

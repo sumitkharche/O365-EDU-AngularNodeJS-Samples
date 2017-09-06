@@ -40,7 +40,7 @@
     <div class="students">
         <div class="tab-content">
             <tabs>
-                <tab [tabTitle]="'Students'">
+                <tab [tabTitle]="'Students'" [tabHash]="'#students'">
                     <div id="students">
                         <table class="table  table-green table-student tablesorter" id="studentsTable">
                             <thead>
@@ -60,7 +60,7 @@
                         </table>
                     </div>
                 </tab>
-                <tab tabTitle="Class Documents">
+                <tab tabTitle="Class Documents" [tabHash]="'#documents'">
                     <div id="documents" class="tab-pane">
                         <table id="studoc" class="table  table-green table-student tablesorter">
                             <thead>
@@ -99,7 +99,7 @@
                         <br style="clear:both">
                     </div>
                 </tab>
-                <tab tabTitle="Conversations">
+                <tab tabTitle="Conversations" [tabHash]="'#conversations'">
                     <div id="conversations" class="tab-pane ">
                         <table id="stuconv" class="table  table-green table-student" *ngIf="classEntity">
                             <tbody *ngIf="!conversations || conversations.length == 0">
@@ -122,7 +122,7 @@
                         <br style="clear:both">
                     </div>
                 </tab>
-                <tab tabTitle="SEATING CHART">
+                <tab tabTitle="SEATING CHART" [tabHash]="'#seatingchart'">
                     <div id="seatingchart" class="tab-pane ">
                         <div class="left" id="dvleft">
                             <div *ngIf="me">

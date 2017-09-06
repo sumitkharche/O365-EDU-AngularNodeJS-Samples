@@ -14,7 +14,6 @@
     <Environment>WEBSITE_HOSTNAME=localhost:44380
 clientId=
 clientSecret=
-BingMapKey=
 sourceCodeRepositoryUrl=
 SQLiteDB=database.sqlite</Environment>
   </PropertyGroup>
@@ -177,6 +176,7 @@ SQLiteDB=database.sqlite</Environment>
     <Content Include="app\images\cancel.png" />
     <Content Include="app\images\ClassDetailsTiles-bg.jpg" />
     <Content Include="app\images\close.png" />
+    <Content Include="app\images\collapse-arrow.png" />
     <Content Include="app\images\contaerbg.gif" />
     <Content Include="app\images\conversation_icon.png" />
     <Content Include="app\images\conversation_icon_hover.png" />
@@ -187,6 +187,7 @@ SQLiteDB=database.sqlite</Environment>
     <Content Include="app\images\document_icon_hover.png" />
     <Content Include="app\images\document_icon_selected.png" />
     <Content Include="app\images\edit.png" />
+    <Content Include="app\images\expand-arrow.png" />
     <Content Include="app\images\global_pagination_first.png" />
     <Content Include="app\images\global_pagination_last.png" />
     <Content Include="app\images\global_pagination_next.png" />

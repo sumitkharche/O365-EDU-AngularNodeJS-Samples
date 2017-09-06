@@ -22,11 +22,17 @@ export class DemoHelperService {
             sourceCodeRepositoryUrl = sourceCodeRepositoryUrl.slice(0, -1)
         }
 
+        let locationHash = location.hash;
+
         for (var i = 0; i < pages.length; i++) {
             let page = pages[i];
             if (page.component == component) {
-                for (var i = 0; i < page.links.length; i++) {
-                    page.links[i].url = sourceCodeRepositoryUrl + page.links[i].url;
+                page.links = page.links.filter(link => (link.tab == "" || link.tab.indexOf(locationHash) >= 0));
+                for (var l = 0; l < page.links.length; l++) {
+                    for (var i = 0; i < page.links[l].files.length; i++) {
+                        page.links[l].collapsed = false;
+                        page.links[l].files[i].url = sourceCodeRepositoryUrl + page.links[l].files[i].url;
+                    }
                 }
                 result = page;
                 break;

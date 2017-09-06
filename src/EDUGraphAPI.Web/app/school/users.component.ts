@@ -135,7 +135,8 @@ export class UsersComponent implements OnInit {
         this.sub.unsubscribe();
     }
 
-    switchView(view: string) {
+    switchView(view: string, hash: string) {
+        location.hash = hash;
         this.view = view;
     }
 

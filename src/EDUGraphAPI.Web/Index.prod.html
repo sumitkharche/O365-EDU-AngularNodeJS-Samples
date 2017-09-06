@@ -18,11 +18,7 @@
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script>
         window["zoneAwarePromise"] = window["Promise"];
-        function onBingLoad() {
-            window["Promise"] = window["zoneAwarePromise"];
-        }
     </script>
-    <script type="text/javascript" src="//www.bing.com/api/maps/mapcontrol?callback=onBingLoad" async defer></script>
     <script src="dist/bundle.js"></script>
 </body>
 </html>
