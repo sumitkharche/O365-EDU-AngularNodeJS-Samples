@@ -21,9 +21,8 @@ router.post('/:userId/unlink', function (req, res) {
         .catch(error => res.json(500, { error: error }));
 });
 
-router.get('/:o365Email/FavoriteColor', function (req, res) {
-    var email = req.params.o365Email.toLowerCase();
-    userService.GetUserFavoriteColorByO365Email(email)
+router.get('/:o365Id/FavoriteColor', function (req, res) {
+    userService.GetUserFavoriteColorByO365Id(req.params.o365Id)
         .then((ret) => res.json(ret))
         .catch(error => res.json(""));
 });

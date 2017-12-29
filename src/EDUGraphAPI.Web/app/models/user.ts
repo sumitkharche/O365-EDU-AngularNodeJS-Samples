@@ -52,24 +52,24 @@ export class UserModel {
     }
 }
 
-export class StudentModel extends UserModel {
+//export class StudentModel extends UserModel {
 
-    @JsonProperty("extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_StudentId")
-    public StudentId: string;
+//    @JsonProperty("extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_StudentId")
+//    public StudentId: string;
 
-    constructor() {
-        super();
-        this.StudentId = undefined;
-    }
-}
+//    constructor() {
+//        super();
+//        this.StudentId = undefined;
+//    }
+//}
 
-export class TeacherModel extends UserModel {
+//export class TeacherModel extends UserModel {
 
-    @JsonProperty("extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_TeacherId")
-    public TeacherId: string;
+//    @JsonProperty("extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_TeacherId")
+//    public TeacherId: string;
 
-    constructor() {
-        super();
-        this.TeacherId = undefined;
-    }
-}
+//    constructor() {
+//        super();
+//        this.TeacherId = undefined;
+//    }
+//}

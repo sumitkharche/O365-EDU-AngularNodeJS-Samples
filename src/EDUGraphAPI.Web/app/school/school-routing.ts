@@ -6,7 +6,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { SchoolComponent } from './school.component'
 import { ClassesComponent } from './classes.component'
 import { MyClassesComponent } from './myclasses.component'
-import { UsersComponent } from './users.component'
 import { ClassDetailComponent } from './classdetail.component';
 
 const routes: Routes = [
@@ -15,19 +14,15 @@ const routes: Routes = [
         component: SchoolComponent
     },
     {
-        path: 'classes/:id/:id2',
+        path: 'classes/:id',
         component: ClassesComponent
     },
     {
-        path: 'myclasses/:id/:id2',
+        path: 'myclasses/:id',
         component: MyClassesComponent
     },
     {
-        path: 'users/:id/:id2',
-        component: UsersComponent
-    },
-    {
-        path: 'classdetail/:id/:id2/:id3',
+        path: 'classdetail/:id/:id2',
         component: ClassDetailComponent
     }
 ];

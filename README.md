@@ -95,10 +95,27 @@ EDUGraphAPI is based on NodeJS (the server-side) and Angular 2 (the client-side)
 
      | API                            | Application Permissions | Delegated Permissions                    |
      | ------------------------------ | ----------------------- | ---------------------------------------- |
-     | Microsoft Graph                | Read directory data     | Read all users' full profiles<br>Read directory data<br>Read directory data<br>Access directory as the signed in user<br>Sign users in |
+     | Microsoft Graph                |                         | Read directory data<br>Access directory as the signed in user<br>Sign users in<br> Have full access to all files user can access<br> Have full access to user files<br> Read users' class assignments without grades<br> Read and write users' class assignments without grades<br> Read users' class assignments and their grades<br> Read and write users' class assignments and their grades |
      | Windows Azure Active Directory |                         | Sign in and read user profile<br>Read and write directory data |
 
      ![](/Images/aad-create-app-06.png)
+
+     **Application Permissions**
+
+     | Permission          | Description                              |
+     | ------------------- | ---------------------------------------- |
+     | Read directory data | Allows the app to read data in your organization's directory, such as users, groups and apps, without a signed-in user. |
+
+     **Delegated Permissions**
+
+     | Permission                             | Description                              |
+     | -------------------------------------- | ---------------------------------------- |
+     | Read all users' full profiles          | Allows the app to read the full set of profile properties, reports, and managers of other users in your organization, on behalf of the signed-in user. |
+     | Read directory data                    | Allows the app to read data in your organization's directory, such as users, groups and apps. |
+     | Access directory as the signed in user | Allows the app to have the same access to information in the directory as the signed-in user. |
+     | Sign users in                          | Allows users to sign in to the app with their work or school accounts and allows the app to see basic user profile information. |
+     | Sign in and read user profile          | Allows users to sign-in to the app, and allows the app to read the profile of signed-in users. It also allows the app to read basic company information of signed-in users. |
+     | Read and write directory data          | Allows the app to read and write data in your organization's directory, such as users, and groups.  It does not allow the app to delete users or groups, or reset user passwords. |
 
    - Click **Keys**, then add a new key:
 
@@ -384,13 +401,13 @@ The **EducationServiceClient** is the core class of the library. It is used to e
 
 ~~~typescript
 getSchools(): Observable<any[]> {
-    return this.dataService.getArray<any>(this.urlBase + "/administrativeUnits");
+     return this.dataService.getArray<any>(this.urlBase + "/education/schools");
 }
 ~~~
 
 ~~~typescript
 getSchoolById(id: string): Observable<any> {
-    return this.dataService.getObject(this.urlBase + '/administrativeUnits/' + id );
+   return this.dataService.getObject(this.urlBase + '/education/schools/' + id );
 }
 ~~~
 
@@ -398,30 +415,48 @@ getSchoolById(id: string): Observable<any> {
 
 ~~~typescript
 getClasses(schoolId: string, nextLink: string): Observable<PagedCollection<any>> {
-    let url: string = this.urlBase + "/groups?$top=12&$filter=extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20'Section'%20and%20extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20'" + schoolId + "'" + (nextLink ? "&" + GraphHelper.getSkipToken(nextLink) : '');
-    return this.dataService.getPagedCollection<any>(url);
+    let url: string = `${this.urlBase}/education/schools/${schoolId}/classes?$top=12` +
+            (nextLink ? "&" + GraphHelper.getSkipToken(nextLink) : '');
+        return this.dataService.getPagedCollection<any>(url);
 }
 ~~~
 
 ```typescript
 getClassById(classId: string): Observable<any> {
-    return this.dataService.getObject<any>(this.urlBase + "/groups/" + classId + "?$expand=members");
+    return this.dataService.getObject<any>(this.urlBase + "/education/classes/" + classId + "?$expand=members");
 }
 ```
-**Get users**
+**Get assignments**
 
 ```typescript
-getUsers(schoolId: string, nextLink: string): Observable<PagedCollection<any>> {
-    var url = this.urlBase + "/administrativeUnits/" + schoolId + "/members?$top=12" +
-  (nextLink ? "&" + GraphHelper.getSkipToken(nextLink) : '');
-    return this.dataService.getPagedCollection<any>(url);
-}
+getAssignmentsByClassId(classId: string): Observable<any[]> {
+        return this.dataService.getArray<any>(`${this.urlBase}/education/classes/${classId}/assignments`);
+    }
 ```
+```
+    createAssignment(assignment: Assignment): Observable<any> {
+        let data = {
+            "dueDateTime": assignment.DueDateTime,
+            "displayName": assignment.DisplayName,
+            "status": assignment.Status,
+            "allowStudentsToAddResourcesToSubmission": true,
+            "assignTo": {
+                "@odata.type": "#microsoft.education.assignments.api.educationAssignmentClassRecipient"
+            }
+        };
+        return this.dataService.postToGraph(`${this.urlBase}/education/classes/${assignment.ClassId}/assignments`, data);
+    }
+```
+
+```
+    publishAssignment(assignment: Assignment): Observable<any> {
+        return this.dataService.postToGraph(`${this.urlBase}/education/classes/${assignment.ClassId}/assignments/${assignment.Id}/publish`, null);
+    }
+```
+
 Below are some screenshots of the sample app that show the education data.
 
 ![](Images/edu-schools.png)
-
-![](Images/edu-users.png)
 
 ![](Images/edu-classes.png)
 

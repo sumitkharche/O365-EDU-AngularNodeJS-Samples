@@ -10,7 +10,7 @@ import { Injectable, Inject } from '@angular/core';
 import { PagedCollection } from '../models/common/pagedCollection';
 import { Http, Response, Headers } from '@angular/http';
 import { Observable, ReplaySubject } from 'rxjs/Rx';
-import { SchoolModel } from '../school/school';
+import { FileItem } from 'ng2-file-upload'
 import { AuthHelper } from "../authHelper/authHelper";
 
 export class Item {
@@ -83,6 +83,23 @@ export class DataService {
 
     public post(actionUrl: string, data: any) {
         return this._http.post(actionUrl, data, { headers: this.getHeaderWithoutToken() });
+    }
+
+    public postToGraph(actionUrl: string, data: any): Observable<any> {
+        let activeProject: ReplaySubject<any> = new ReplaySubject(1);
+        this.authService.getGraphToken(actionUrl)
+            .subscribe(accessToken => {
+                this._http.post(actionUrl, data, { headers: this.getHeader(accessToken) })
+                    .subscribe((data) => {
+                        activeProject.next(<any>data.json());
+                    },
+                    (error) => {
+                        activeProject.error(error);
+                    });
+                },
+                error => activeProject.error(error)
+            )
+        return activeProject;
     }
 
     public getWithoutToken(actionUrl: string) {

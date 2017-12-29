@@ -6,7 +6,7 @@ import { Injectable, Inject } from '@angular/core';
 import { Http, Headers, Response, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Constants } from '../constants';
-import { UserModel } from '../school/user';
+import { UserModel } from '../models/user';
 import { AuthorizationHelper, Prompt } from '../utils/AuthorizationHelper';
 import { AuthHelper } from "../authHelper/authHelper";
 import { MeService } from "../services/meService";

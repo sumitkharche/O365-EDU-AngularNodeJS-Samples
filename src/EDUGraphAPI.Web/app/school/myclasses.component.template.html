@@ -46,39 +46,31 @@
                 <div class="nodata" *ngIf="showNoData"> {{noDataText}}</div>
                 <div class="content clearfix" *ngIf="classesArray">
                     <div class="tile-container" *ngFor="let classEntity of classesArray" on-mouseover='showDetail(classEntity)' on-mouseout='hideDetail(classEntity)'>
-                        <a class="mysectionlink" (click)="gotoDetail(classEntity.ObjectId);false">
+                        <a class="mysectionlink" (click)="gotoDetail(classEntity.Id);false">
                             <div class="tile">
                                 <h5>{{classEntity.DisplayName}}</h5>
-                                <h2>{{classEntity.CombinedCourseNumber}}</h2>
+                                <h2>{{classEntity.ClassCode}}</h2>
                             </div>
                         </a>
-                        <div class="tile" *ngIf="!classEntity.IsMyClasses">
-                            <h5>{{classEntity.DisplayName}}</h5>
-                            <h2>{{classEntity.CombinedCourseNumber}}</h2>
-                        </div>
                         <div class="detail" [hidden]="!classEntity.UIHoverShowDetail">
-                            <h5>Course Id:</h5>
-                            <h6>{{classEntity.CourseId}}</h6>
-                            <h5>Description:</h5>
-                            <h6>{{classEntity.CourseDescription}}</h6>
+                            <h5>Class Number:</h5>
+                            <h6>{{classEntity.ClassCode}}</h6>
                             <h5>Teachers:</h5>
-                            <h6>
-                                <span *ngFor="let user of classEntity.Users">
-                                    <span *ngIf="user.ObjectType=='Teacher'">
+                            <h6 class="teachers">
+                                <span *ngFor="let user of classEntity.Teachers">
+                                    <span>
                                         {{user.DisplayName}}
                                     </span>
                                 </span>
                             </h6>
                             <h5>Term Name:</h5>
-                            <h6>{{classEntity.TermName}}</h6>
+                            <h6><span  *ngIf="classEntity.Term.DisplayName">{{classEntity.Term.DisplayName}}</span></h6>
                             <h5>Start/Finish Date:</h5>
                             <h6>
-                                <span id="termdate">{{classEntity.TermStartDate}}</span>
+                                <span id="termdate">{{classEntity.Term.StartDate}}</span>
                                 <span> - </span>
-                                <span id="termdate">{{classEntity.TermEndDate}}</span>
+                                <span id="termdate">{{classEntity.Term.EndDate}}</span>
                             </h6>
-                            <h5>Period:</h5>
-                            <h6>{{classEntity.Period}}</h6>
                         </div>
                     </div>
                 </div>

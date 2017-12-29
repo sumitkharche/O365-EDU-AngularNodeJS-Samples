@@ -6,10 +6,11 @@
 
 import { Component, OnInit, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { SchoolModel } from './school'
+import { EducationSchool } from '../models/educationschool'
 import { SchoolService } from './school.service';
 import { MapUtils } from '../utils/jsonHelper'
-import { UserModel } from './user'
+import { UserModel } from '../models/user';
+import { EducationUser } from '../models/educationuser'
 import { Constants } from '../constants';
 import { MeService } from "../services/meService";
 import { Cookie } from '../services/cookieService';
@@ -24,12 +25,13 @@ import { Cookie } from '../services/cookieService';
 
 export class SchoolComponent implements OnInit {
 
-    schools: SchoolModel[];
+    schools: EducationSchool[];
     me: UserModel;
-    mySchool: SchoolModel;
+    mySchool: EducationSchool;
     areAccountsLinked: boolean;
     isLocalAccount: boolean;
     showNoData: boolean = false;
+    joinableuser: EducationUser;
 
     constructor(
         private router: Router,
@@ -42,34 +44,52 @@ export class SchoolComponent implements OnInit {
             .getMe()
             .subscribe((result) => {
                 this.me = MapUtils.deserialize(UserModel, result);
-                Cookie.SetCookiesForO365Users(this.me.DisplayName, this.me.Email);
-                this.schoolService
-                    .getSchools()
-                    .subscribe((result) => {
-                        this.schools = [];
-                        result.forEach((school) => { this.schools.push(MapUtils.deserialize(SchoolModel, school)); })
-                        if (this.schools.length == 0) {
-                            this.showNoData = true;
-                        }
-                        this.schools.forEach((school) => {
-                            if (this.me.SchoolId == school.SchoolId) {
-                                school.IsMySchool = true;
-                                this.mySchool = school;
-                            }
-                            if (!school.PrincipalName || school.PrincipalName == "") {
-                                school.PrincipalName = "-";
-                            }
+                if (this.me) {
+                    Cookie.SetCookiesForO365Users(this.me.DisplayName, this.me.Email);
+                    this.schoolService
+                        .getJoinableUser()
+                        .subscribe((user) => {
+                            this.joinableuser = MapUtils.deserialize(EducationUser, user);
+                            user.schools.forEach((school) => {
+                                this.joinableuser.Schools.push(MapUtils.deserialize(EducationSchool, school))
+                            });
+                            this.schoolService
+                                .getSchools()
+                                .subscribe((result) => {
+                                    this.schools = [];
+                                    result.forEach((school) => { this.schools.push(MapUtils.deserialize(EducationSchool, school)); })
+                                    if (this.schools.length == 0) {
+                                        this.showNoData = true;
+                                    }
+
+                                    if (this.joinableuser.Schools.length > 0) {
+                                        this.schools.forEach((school) => {
+                                            if (this.joinableuser.Schools[0].Id == school.Id) {
+                                                school.IsMySchool = true;
+                                                this.mySchool = school;
+                                            }
+                                            if (school.Address != null && (!school.Address.Street || school.Address.Street == "")
+                                                && (!school.Address.PostalCode || school.Address.PostalCode == "")) {
+                                                school.Address.Street = "-";
+                                            }
+                                            if (!school.PrincipalName || school.PrincipalName == "") {
+                                                school.PrincipalName = "-";
+                                            }
+                                        });
+                                    }
+
+                                    this.schools.sort((n1, n2) => {
+                                        if (n1.IsMySchool) {
+                                            return -1;
+                                        }
+                                        if (n2.IsMySchool) {
+                                            return 1;
+                                        }
+                                        return n1.DisplayName > n2.DisplayName ? 1 : (n1.DisplayName < n2.DisplayName ? -1 : 0);
+                                    });
+                                });
                         });
-                        this.schools.sort((n1, n2) => {
-                            if (n1.IsMySchool) {
-                                return -1;
-                            }
-                            if (n2.IsMySchool) {
-                                return 1;
-                            }
-                            return n1.DisplayName > n2.DisplayName ? 1 : (n1.DisplayName < n2.DisplayName ? -1 : 0);
-                        });
-                    });
+                }
             });
         this.initLocalAndLinkedState();
     }
@@ -83,15 +103,9 @@ export class SchoolComponent implements OnInit {
         this.isLocalAccount = this.meService.isLocalAccount();
     }
 
-    gotoClasses(school: SchoolModel) {
+    gotoClasses(school: EducationSchool) {
         setTimeout(() => {
-            this.router.navigate(['myclasses', school.ObjectId, school.SchoolId]);
-        }, 100);
-    }
-
-    gotoUsers(school: SchoolModel) {
-        setTimeout(() => {
-            this.router.navigate(['users', school.ObjectId, school.SchoolId], { fragment: "filterall" });
+            this.router.navigate(['myclasses', school.Id]);
         }, 100);
     }
 

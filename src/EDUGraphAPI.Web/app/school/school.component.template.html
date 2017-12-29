@@ -5,14 +5,6 @@
         <div class="col-md-6">
             <div class="a-heading schoolname">ALL SCHOOLS</div>
         </div>
-        <div class="col-md-6 schooltiles" *ngIf="me">
-            <div class="infocontainer" *ngIf="me.ObjectType=='Student' || me.ObjectType=='Teacher'">
-                <div class="infoheader">
-                    <span>{{me.ObjectType}}</span> Id
-                </div>
-                <div class="infobody">{{me.TeacherId}}{{me.StudentId}}</div>
-            </div>
-        </div>
         <div class="container myschool">
             <div class="schoolenrolled">Current school(s) enrolled</div>
             <div class="greenicon"></div>
@@ -36,14 +28,14 @@
                     <td>{{item.LowestGrade }} - {{item.HighestGrade }}</td>
                     <td>
                         <div class="schooladdress">
-                            {{item.Address}}
-                            <br *ngIf="item.City" />
-                            {{item.CompoundAddress }}
+                            <span *ngIf="item.Address.Street">{{item.Address.Street}}</span>
+                            <span *ngIf="!item.Address.Street">No Street</span>
+                            <br *ngIf="item.CompoundAddress" />
+                            <span>{{item.CompoundAddress }}</span>
                         </div>
                     </td>
                     <td>
                         <a class="btnlink" (click)="gotoClasses(item);false">Classes</a>
-                        <a class="btnlink" (click)="gotoUsers(item);false">Teachers/students</a>
                     </td>
                 </tr>
             </tbody>
