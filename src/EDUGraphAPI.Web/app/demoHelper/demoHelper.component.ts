@@ -60,7 +60,7 @@ export class DemoHelper implements OnInit {
         this.demoHelperService.getDemoData()
             .subscribe(res => {
                 this.DemoPage = res;
-                this.HasDemo = this.DemoPage != {};
+                this.HasDemo = this.DemoPage.links.length > 0;
             });
     }
 }

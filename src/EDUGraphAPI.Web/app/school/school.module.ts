@@ -14,11 +14,11 @@ import { SchoolComponent } from './school.component';
 import { routing } from './school-routing';
 import { ClassesComponent } from './classes.component';
 import { MyClassesComponent } from './myclasses.component';
-import { UsersComponent } from './users.component';
 import { ClassDetailComponent } from './classdetail.component';
 import { Tabs } from '../tabs/tabs';
 import { Tab } from '../tabs/tab';
 import { CustomPosition, CustomUserId, CustomRealHeader, CustomPrevPosition } from './customdirectives';
+import { FileSelectDirective } from 'ng2-file-upload';
 
 @NgModule({
     imports: [
@@ -31,14 +31,14 @@ import { CustomPosition, CustomUserId, CustomRealHeader, CustomPrevPosition } fr
         SchoolComponent,
         ClassesComponent,
         MyClassesComponent,
-        UsersComponent,
         ClassDetailComponent,
         Tabs,
         Tab,
         CustomPosition,
         CustomUserId,
         CustomRealHeader,
-        CustomPrevPosition
+        CustomPrevPosition,
+        FileSelectDirective
     ],
     providers: [
         { provide: 'schoolService', useClass: SchoolService },

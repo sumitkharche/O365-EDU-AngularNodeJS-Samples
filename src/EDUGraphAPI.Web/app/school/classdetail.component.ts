@@ -5,21 +5,28 @@
 
 /// <reference path="../../node_modules/@types/jquery/index.d.ts" />
 
-import { Component, OnInit, Inject, OnDestroy, AfterViewChecked, AfterContentInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { SchoolModel } from './school'
+import { Component, OnInit, Inject, OnDestroy, AfterViewChecked, AfterContentInit } from '@angular/core'
+import { Router, ActivatedRoute } from '@angular/router'
 import { MapUtils } from '../utils/jsonhelper'
-import { UserModel } from './user'
-import { ClassesModel } from './classes';
-import { Document, OneDrive } from './document';
-import { Conversation } from './conversation';
-import { SeatingArrangement } from './seatingarrangements';
-import { CompareHelper } from '../utils/compareHelper';
-import * as moment from 'moment';
-import { MeService } from "../services/meService";
-import { SchoolService } from './school.service';
-import { UserPhotoService } from '../services/userPhotoService';
-import { UserService } from '../services/userService';
+import { CompareHelper } from '../utils/compareHelper'
+import * as moment from 'moment'
+import { FileUploader, FileItem } from 'ng2-file-upload'
+import { Constants } from '../constants'
+import { MeService } from "../services/meService"
+import { SchoolService } from './school.service'
+import { UserPhotoService } from '../services/userPhotoService'
+import { AuthHelper } from "../authHelper/authHelper";
+import { UserService } from '../services/userService'
+import { UserModel } from '../models/user'
+import { EducationRole } from '../models/education'
+import { EducationSchool } from '../models/educationschool'
+import { EducationUser } from '../models/educationuser'
+import { EducationClass } from '../models/educationclass'
+import { Document, OneDrive } from '../models/document'
+import { Conversation } from '../models/conversation'
+import { Assignment, ResourceContainer, ResourcesFolder, EducationResource, Submission, EducationSubmissionResource } from '../models/assignment'
+import { SeatingArrangement } from '../models/seatingarrangements';
+
 
 @Component({
     moduleId: module.id,
@@ -31,24 +38,38 @@ import { UserService } from '../services/userService';
 export class ClassDetailComponent implements OnInit, AfterContentInit {
 
     schoolGuId: string;
-    schoolId: string;
+    classId: string;
     private sub: any;
-    school: SchoolModel;
-    classObjectId: string;
+    school: EducationSchool;
     me: UserModel;
-    classEntity: ClassesModel;
+    classEntity: EducationClass;
+    schoolTeachers: UserModel[] = [];
     documents: Document[] = [];
     favoriteColor: string = "";
     oneDriveURL: string = "";
     conversations: Conversation[] = [];
     seatingArrangements: SeatingArrangement[] = [];
     newseatingArrangements: SeatingArrangement[] = [];
+    assignments: Assignment[] = [];
     seatingsCount = [];
     isEditing: boolean = false;
     dragId: string = "";
 
     sortAsc: boolean = false;
     sortDocAsc: boolean = false;
+    showSchoolteachers: boolean = false;
+
+
+    uploader: FileUploader;
+    uploaderType: string;
+    assignmentDetail: Assignment = new Assignment();
+    duetimeArray: string[] = ["12:00 AM", "12:30 AM", "1:00 AM", "1:30 AM", "2:00 AM", "2:30 AM", "3:00 AM", "3:30 AM", "4:00 AM", "4:30 AM", "5:00 AM", "5:30 AM", "6:00 AM", "6:30 AM", "7:00 AM", "7:30 AM", "8:00 AM", "8:30 AM", "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM", "1:00 PM", "1:30 PM", "2:00 PM", "2:30 PM", "3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM", "5:00 PM", "5:30 PM", "6:00 PM", "6:30 PM", "7:00 PM", "7:30 PM", "8:00 PM", "8:30 PM", "9:00 PM", "9:30 PM", "10:00 PM", "10:30 PM", "11:00 PM", "11:30 PM", "11:59 PM",];
+    dueTime: string;
+    assignmentShowAlert: boolean = false;
+    assignmentAlertMessage: string = "";
+    disableActionButton: boolean = false;
+    disabCancelButton: boolean = false;
+    submissions: Submission[];
 
     constructor(
         private router: Router,
@@ -56,7 +77,8 @@ export class ClassDetailComponent implements OnInit, AfterContentInit {
         @Inject('me') private meService: MeService,
         @Inject('schoolService') private schoolService: SchoolService,
         @Inject('userPhotoService') private userPhotoService: UserPhotoService,
-        @Inject('user') private userService: UserService
+        @Inject('user') private userService: UserService,
+        @Inject('auth') private authService: AuthHelper
     ) {
     }
 
@@ -67,74 +89,126 @@ export class ClassDetailComponent implements OnInit, AfterContentInit {
         this.sub = this.route.params.subscribe(params => {
             this.iniData(params);
         });
+
+        this.initAssignments();
+    }
+
+    initAssignments() {
+        this.uploader = new FileUploader({ url: "TBD", removeAfterUpload: true, queueLimit: 5 });
+        this.uploader.onAfterAddingFile = (fileItem: FileItem) => {
+            if (this.uploaderType == "Assignment") {
+                if (this.uploader.queue.filter(item => item.file.name == fileItem.file.name).length > 1
+                    || this.assignmentDetail.Resources.filter(resource => resource.Resource.DisplayName == fileItem.file.name).length > 0) {
+                    this.uploader.removeFromQueue(fileItem);
+                    this.assignmentAlertMessage = "A file named " + fileItem.file.name + " is already attached.";
+                    this.switchAlert(true);
+                    setTimeout(() => {
+                        this.switchAlert(false);
+                    }, 2000);
+                }
+                else if (this.assignmentDetail.Resources.length + this.uploader.queue.length > 5) {
+                    this.uploader.removeFromQueue(fileItem);
+                }
+            }
+            else {
+                if (this.uploader.queue.filter(item => item.file.name == fileItem.file.name).length > 1
+                    || this.submissions[0].Resources.filter(resource => resource.Resource.DisplayName == fileItem.file.name).length > 0) {
+                    this.uploader.removeFromQueue(fileItem);
+                    this.assignmentAlertMessage = "A file named " + fileItem.file.name + " is already attached.";
+                    this.switchAlert(true);
+                    setTimeout(() => {
+                        this.switchAlert(false);
+                    }, 2000);
+                }
+                else if (this.submissions[0].Resources.length + this.uploader.queue.length > 5) {
+                    this.uploader.removeFromQueue(fileItem);
+                }
+            }
+        };
+        this.uploader.onErrorItem = (item: FileItem, response: string, status: number, headers: any) => {
+            var responsePath = JSON.parse(response);
+            console.log(response, responsePath);
+            console.log("test onErrorItem");
+        };
+        this.dueTime = '12:00 AM';
+        $("#duedate").datepicker();
     }
 
     iniData(params) {
         this.schoolGuId = params['id'];
-        this.classObjectId = params['id2'];
-        this.schoolId = params['id3'];
+        this.classId = params['id2'];
 
         this.schoolService
             .getSchoolById(this.schoolGuId)
             .subscribe((result) => {
-                this.school = MapUtils.deserialize(SchoolModel, result);
-            });
-        this.schoolService
-            .getMe()
-            .subscribe((result) => {
-                this.me = MapUtils.deserialize(UserModel, result);
-                this.meService.getCurrentUser()
-                    .subscribe((user) => {
-                        this.favoriteColor = user.favoriteColor;
-                        if (this.me.ObjectType == 'Teacher') {
-                            $(".teacherdesk").css("background-color", user.favoriteColor);
-                        } else {
-                            $(".greenicon").css("background-color", user.favoriteColor);
-                        }
-                        this.schoolService
-                            .getSeatingArrangements(this.classObjectId)
-                            .subscribe((result) => {
-                                result.forEach((obj) => {
-                                    this.seatingArrangements.push(MapUtils.deserialize(SeatingArrangement, obj));
-                                });
+                this.school = MapUtils.deserialize(EducationSchool, result);
+                this.schoolService
+                    .getMe()
+                    .subscribe((result) => {
+                        this.me = MapUtils.deserialize(UserModel, result);
+                        this.meService.getCurrentUser()
+                            .subscribe((user) => {
+                                this.favoriteColor = user.favoriteColor;
+                                if (this.me.ObjectType == 'Teacher') {
+                                    $(".teacherdesk").css("background-color", user.favoriteColor);
+
+                                } else {
+                                    $(".greenicon").css("background-color", user.favoriteColor);
+                                }
                                 this.schoolService
-                                    .getClassById(this.classObjectId)
+                                    .getSeatingArrangements(this.classId)
                                     .subscribe((result) => {
-                                        this.classEntity = MapUtils.deserialize(ClassesModel, result);
-                                        this.classEntity.TermStartDate = moment.utc(this.classEntity.TermStartDate).local().format('MMMM  D YYYY');
-                                        this.classEntity.TermEndDate = moment.utc(this.classEntity.TermEndDate).local().format('MMMM  D YYYY');
-                                        this.classEntity.IsMyClasses = true;
-                                        this.classEntity.Users = [];
+                                        result.forEach((obj) => {
+                                            this.seatingArrangements.push(MapUtils.deserialize(SeatingArrangement, obj));
+                                        });
                                         this.schoolService
-                                            .getClassMembers(this.classObjectId)
-                                            .subscribe((members) => {
-                                                members.value.forEach((obj) => {
-                                                    var user = MapUtils.deserialize(UserModel, obj);
-                                                    this.userPhotoService.getUserPhotoUrl(user.O365UserId)
+                                            .getClassWithMembers(this.classId)
+                                            .subscribe((result) => {
+                                                this.classEntity = MapUtils.deserialize(EducationClass, result);
+                                                this.classEntity.Term.StartDate = moment.utc(this.classEntity.Term.StartDate).local().format('MMMM  DD YYYY');
+                                                this.classEntity.Term.EndDate = moment.utc(this.classEntity.Term.EndDate).local().format('MMMM  DD YYYY');
+                                                this.classEntity.IsMyClasses = true;
+                                                result.members.forEach((member) => {
+                                                    var user = MapUtils.deserialize(EducationUser, member);
+                                                    this.userPhotoService.getUserPhotoUrl(user.Id)
                                                         .then(url => user.Photo = url);
-                                                    this.classEntity.Users.push(user);
-                                                    if (user.ObjectType == "Teacher") {
-                                                        this.classEntity.Teachers.push(user);
-                                                    }
-                                                    if (user.ObjectType == "Student") {
-                                                        this.userService.GetUserFavoriteColorByO365Email(user.Email)
+                                                    if (user.PrimaryRole == EducationRole.Student) {
+                                                        this.userService.GetUserFavoriteColorByO365Id(user.Id)
                                                             .subscribe((color) => {
                                                                 user.FavoriteColor = color;
-                                                                this.classEntity.Students.push(user);
-                                                                this.setSeatings();
-                                                                this.sortMembers();
                                                             });
-
                                                     }
-                                                });
+                                                    this.classEntity.Users.push(user);
+                                                    if (user.PrimaryRole == EducationRole.Teacher) {
+                                                        this.classEntity.Teachers.push(user)
+                                                    }
+                                                    if (user.PrimaryRole == EducationRole.Student) {
+                                                        this.classEntity.Students.push(user)
+                                                    }
 
+                                                });
+                                                this.setSeatings();
+                                                this.sortMembers();
+                                                if (this.me.ObjectType == 'Teacher') {
+                                                    this.schoolService.getAllTeachers(this.school.SchoolNumber)
+                                                        .subscribe((teachers) => {
+                                                            teachers.forEach((obj) => {
+                                                                var teacher = MapUtils.deserialize(UserModel, obj);
+                                                                if (this.classEntity.Teachers.filter(t => t.Id == teacher.O365UserId).length == 0) {
+                                                                    this.userPhotoService.getUserPhotoUrl(teacher.O365UserId)
+                                                                        .then(url => teacher.Photo = url);
+                                                                    this.schoolTeachers.push(teacher);
+                                                                }
+                                                            });
+                                                        });
+                                                }
                                             });
                                     });
                             });
                     });
             });
         this.schoolService
-            .getDocuments(this.classObjectId)
+            .getDocuments(this.classId)
             .subscribe((result) => {
                 result.forEach((obj) => {
                     var doc = MapUtils.deserialize(Document, obj);
@@ -145,15 +219,32 @@ export class ClassDetailComponent implements OnInit, AfterContentInit {
                 });
             });
         this.schoolService
-            .getOneDriveWebURl(this.classObjectId)
+            .getOneDriveWebURl(this.classId)
             .subscribe((result) => {
                 this.oneDriveURL = MapUtils.deserialize(OneDrive, result).webUrl;
             });
         this.schoolService
-            .getConversations(this.classObjectId)
+            .getConversations(this.classId)
             .subscribe((result) => {
                 result.forEach((obj) => {
                     this.conversations.push(MapUtils.deserialize(Conversation, obj));
+                });
+            });
+        this.schoolService
+            .getAssignmentsByClassId(this.classId)
+            .subscribe((result) => {
+                result.forEach((obj) => {
+                    let assignment: Assignment = MapUtils.deserialize(Assignment, obj);
+                    assignment.Resources = [];
+                    if (obj.resources.length > 0) {
+                        obj.resources.forEach((obj) => {
+                            let resource: ResourceContainer = MapUtils.deserialize(ResourceContainer, obj);
+                            resource.Resource = MapUtils.deserialize(EducationResource, obj.resource);
+                            assignment.Resources.push(resource);
+                        });
+                    }
+                    assignment.DueDateTime = !assignment.DueDateTime? "":moment.utc(assignment.DueDateTime).local().format('M/DD/YYYY');
+                    this.assignments.push(assignment);
                 });
             });
     }
@@ -161,7 +252,237 @@ export class ClassDetailComponent implements OnInit, AfterContentInit {
     ngOnDestroy() {
         this.sub.unsubscribe();
     }
+    //asignment
+    switchAlert(value) {
+        this.assignmentShowAlert = value;
+    }
+    createNewAssignment(status: string) {
+        this.disableActionButton = true;
 
+        this.assignmentDetail.AllowStudentsToAddResourcesToSubmission = true;
+        this.assignmentDetail.ClassId = this.classId;
+        this.assignmentDetail.DueDateTime = moment($("#duedate").val() + " " + this.dueTime).utc().format("YYYY-MM-DDTHH:mm:ss")+"Z";
+        this.assignmentDetail.Status = "draft";
+        this.schoolService.createAssignment(this.assignmentDetail)
+            .subscribe((obj) => {
+                this.assignmentDetail = MapUtils.deserialize(Assignment, obj);
+                if (status == "assigned") {
+                    this.schoolService.publishAssignment(this.assignmentDetail)
+                        .subscribe((obj) => {
+                            this.uploadAssignmentFiles();
+                        })
+                }
+                else {
+                    this.uploadAssignmentFiles();
+                }
+            })
+    }
+    uploadAssignmentFiles() {
+        if (this.uploader.queue.length > 0) {
+            this.schoolService.getAssignmentResourceFolder(this.assignmentDetail)
+                .subscribe((obj) => {
+                    let resourcesFolder: ResourcesFolder = MapUtils.deserialize(ResourcesFolder, obj);
+                    let ids: string[] = this.getIdsFromResourceFolder(resourcesFolder.ResourceFolderURL);
+                    if (ids.length > 1) {
+                        this.authService.getGraphToken(Constants.MSGraphResource)
+                            .subscribe(accessToken => {
+                                let fileCount = this.uploader.queue.length;
+                                let fileStep = 0;
+                                this.uploader.queue.forEach((item: FileItem) => {
+                                    item.headers = [{ name: 'Authorization', value: 'Bearer ' + accessToken }, { name: 'Content-Type', value: 'application/json' }];
+                                    item.method = "PUT";
+                                    item.withCredentials = false;
+                                    item.url = `${Constants.MSGraphResource}/v1.0/drives/${ids[0]}/items/${ids[1]}:/${item.file.name}:/content`;
+
+                                    item.onSuccess = (response: string, status: number, headers: any) => {
+                                        var file = JSON.parse(response);
+                                        if (file) {
+                                            this.schoolService.addAssignmentResources(this.classId,
+                                                this.assignmentDetail.Id,
+                                                file.name,
+                                                this.getFileType(file.name),
+                                                `${Constants.MSGraphResource}/v1.0/drives/${file.parentReference.driveId}/items/${file.id}`)
+                                                .subscribe((obj) => {
+                                                    console.log("queue length " + this.uploader.queue.length);
+                                                    fileStep++
+                                                    if (fileStep >= fileCount) {
+                                                        window.location.reload();
+                                                    }
+                                                });
+                                        }
+                                    };
+
+                                })
+                                this.uploader.uploadAll();
+                            });
+                    }
+                });
+        }
+        else {
+            window.location.reload();
+        }
+    }
+    getFileType(filename: string): string {
+        if (filename.toLowerCase().endsWith(".docx")) {
+            return "#microsoft.graph.educationWordResource";
+        }
+        else if (filename.toLowerCase().endsWith(".xlsx")) {
+            return "#microsoft.graph.educationExcelResource";
+        }
+        else {
+            return "#microsoft.graph.educationFileResource";
+        }
+    }
+    getIdsFromResourceFolder(resourceFolder:string):string[] {
+        let array: string[] = resourceFolder.split('/');
+        let result: string[] = [];
+        if (array.length >= 3) {
+            result.push(array[array.length - 3]);
+            result.push(array[array.length - 1]);
+        }
+        return result;
+    }
+    showNewAssignment() {
+        this.disableActionButton = false;
+        this.disabCancelButton = false;
+
+        this.assignmentDetail = new Assignment();
+        this.uploader.clearQueue();
+        this.uploaderType = "Assignment";
+
+        $("#new-assignment-form").modal("show");
+        
+    }
+
+    showAssignmentDetail(assignment: Assignment) {
+        this.disableActionButton = false;
+        this.disabCancelButton = false;
+
+        this.assignmentDetail = assignment;
+        this.uploader.clearQueue();
+        this.uploaderType = "Assignment";
+
+        $("#assignment-detail-form").modal("show");
+
+        if (this.me.ObjectType == 'Student') {
+            this.uploaderType = "Submission";
+            this.getAssignmentResourcesSubmission()
+            if (!this.assignmentDetail.AllowLateSubmissions && moment.utc(this.assignmentDetail.DueDateTime).local() < moment()) {
+                this.disableActionButton = true;
+            }
+        }
+    }
+
+    showAssignmentSubmissions(assignment: Assignment) {
+        this.assignmentDetail = assignment;
+        $("#assignment-submissions-form").modal("show");
+        this.getAssignmentSubmissions();
+    }
+
+    updateAssignment(status: string) {
+        this.disableActionButton = true;
+        if (this.assignmentDetail.Status == "draft" && status == "assigned") {
+            this.schoolService.publishAssignment(this.assignmentDetail)
+                .subscribe((obj) => {
+                    this.uploadAssignmentFiles();
+                })
+        }
+        else {
+            this.uploadAssignmentFiles();
+        }
+    }
+    getAssignmentSubmissions() {
+        this.submissions = [];
+        this.schoolService.getAssignmentSubmissions(this.classId, this.assignmentDetail.Id)
+            .subscribe((obj) => {
+                obj.forEach((item) => {
+                    let submission: Submission = MapUtils.deserialize(Submission, item);
+                    this.schoolService.getUserById(submission.SubmittedBy.User.Id)
+                        .subscribe((obj) => {
+                            submission.SubmittedBy.User.DisplayName = obj.displayName;
+                        })
+                    submission.Resources = [];
+                    item.resources.forEach((resource) => {
+                        submission.Resources.push(MapUtils.deserialize(EducationSubmissionResource, resource));
+                    });
+                    submission.SubmittedDateTime = !submission.SubmittedDateTime ? "None" : moment.utc(submission.SubmittedDateTime).local().format('M/DD/YYYY')
+                    this.submissions.push(submission);
+                });
+            });
+    }
+
+    getAssignmentResourcesSubmission() {
+        this.submissions = []
+        this.schoolService.getAssignmentSubmissionByUser(this.classId, this.assignmentDetail.Id, this.me.O365UserId)
+            .subscribe((result) => {
+                result.forEach((item) => {
+                    let submission: Submission = MapUtils.deserialize(Submission, item);
+                    submission.Resources = [];
+                    item.resources.forEach((resource) => {
+                        submission.Resources.push(MapUtils.deserialize(EducationSubmissionResource, resource));
+                    });
+                    this.submissions.push(submission);
+                })
+            });
+    }
+    newAssignmentSubmissionResource() {
+        this.disabCancelButton = true;
+        this.disableActionButton = true;
+
+        if (this.submissions.length > 0) {
+            this.uploadSubmissionFiles();
+        }
+        
+    }
+
+    uploadSubmissionFiles() {
+        if (this.uploader.queue.length > 0) {
+
+            let ids: string[] = this.getIdsFromResourceFolder(this.submissions[0].ResourcesFolderUrl);
+            if (ids.length > 1) {
+                this.authService.getGraphToken(Constants.MSGraphResource)
+                    .subscribe(accessToken => {
+                        let fileCount = this.uploader.queue.length;
+                        let fileStep = 0;
+                        this.uploader.queue.forEach((item: FileItem) => {
+                            item.headers = [{ name: 'Authorization', value: 'Bearer ' + accessToken }, { name: 'Content-Type', value: 'application/json' }];
+                            item.method = "PUT";
+                            item.withCredentials = false;
+                            item.url = `${Constants.MSGraphResource}/v1.0/drives/${ids[0]}/items/${ids[1]}:/${item.file.name}:/content`;
+
+                            item.onSuccess = (response: string, status: number, headers: any) => {
+                                var file = JSON.parse(response);
+                                if (file) {
+                                    this.schoolService.AddSubmissionResource(this.classId,
+                                        this.assignmentDetail.Id,
+                                        this.submissions[0].Id,
+                                        file.name,
+                                        this.getFileType(file.name),
+                                        `${Constants.MSGraphResource}/v1.0/drives/${file.parentReference.driveId}/items/${file.id}`)
+                                        .subscribe((obj) => {
+                                            console.log("queue length " + this.uploader.queue.length);
+                                            fileStep++
+                                            if (fileStep >= fileCount) {
+                                                window.location.reload();
+                                            }
+                                        });
+                                }
+                            };
+
+                        })
+                        this.uploader.uploadAll();
+                    });
+            }
+        }
+        else {
+            window.location.reload();
+        }
+    }
+
+
+    switchSchoolteachers(value) {
+        this.showSchoolteachers = value;
+    }
     sortMembers() {
         this.classEntity.Students.sort((n1, n2) => {
             if (n1.DisplayName > n2.DisplayName) {
@@ -177,7 +498,7 @@ export class ClassDetailComponent implements OnInit, AfterContentInit {
     setSeatings() {
         this.classEntity.Students.forEach((stu) => {
             this.seatingArrangements.forEach((arrangment) => {
-                if (stu.O365UserId == arrangment.o365UserId) {
+                if (stu.Id == arrangment.o365UserId) {
                     stu.SeatingArrangment = arrangment.position + "";
                     stu.SeatingClass = "seated hideitem";
                     if (stu.SeatingArrangment != "0") {
@@ -186,19 +507,28 @@ export class ClassDetailComponent implements OnInit, AfterContentInit {
                         stu.SeatingClass = "seated";
                     }
 
-                    if (this.me.O365UserId == stu.O365UserId) {
+                    if (this.me.O365UserId == stu.Id) {
                         stu.ContainerClass = "deskcontainer green";
-                        //stu.BackgroundColor = this.favoriteColor;
                     }
                 }
             });
         });
     }
 
-    gotoClasses(school: SchoolModel) {
-        this.router.navigate(['classes', school.ObjectId, school.SchoolId]);
+    gotoClasses(school: EducationSchool) {
+        this.router.navigate(['classes', school.Id, school.Id]);
     }
 
+    addCoTeacher(userId: string) {
+        this.schoolService.addUserToSectionMembers(this.classId, userId)
+            .subscribe((data) => {
+                this.schoolService.addUserToSectionOwners(this.classId, userId)
+                    .subscribe((data) => {
+                        window.location.reload();
+                    })
+            })
+
+    }
     ngAfterContentInit() {
         var interval = setInterval(() => {
             if (this.classEntity && this.classEntity.Students && this.classEntity.Students.length > 0) {
@@ -249,7 +579,7 @@ export class ClassDetailComponent implements OnInit, AfterContentInit {
             if (userid) {
                 var position = $(this).attr("ng-reflect-position");
                 var arrangement = new SeatingArrangement();
-                arrangement.classId = detail.classObjectId;
+                arrangement.classId = detail.classId;
                 arrangement.o365UserId = userid;
                 arrangement.position = position;
                 detail.newseatingArrangements.push(arrangement);
@@ -266,7 +596,7 @@ export class ClassDetailComponent implements OnInit, AfterContentInit {
             $(this).removeClass("unsaved").removeAttr("ng-reflect-prev-position");
         });
         this.schoolService
-            .saveSeatingArrangement(this.classObjectId, detail.newseatingArrangements)
+            .saveSeatingArrangement(this.classId, detail.newseatingArrangements)
             .subscribe();
         $(".deskcontainer.unsaved").removeClass("unsaved");
         $(".desktile .deskcontainer[ng-reflect-prev-position]").removeAttr("ng-reflect-prev-position");
@@ -457,18 +787,18 @@ export class ClassDetailComponent implements OnInit, AfterContentInit {
             var sort = CompareHelper.createComparer("DisplayName", this.sortAsc);
             this.classEntity.Students.sort(sort);
         }
-        else {
-            if (this.sortAsc) {
-                $("#students .table-green-header th").last().addClass("headerSortUp");
-                this.sortAsc = false;
-            } else {
-                $("#students .table-green-header th").last().addClass("headerSortDown");
-                this.sortAsc = true;
-            }
-            var sort = CompareHelper.createComparer("EducationGrade", this.sortAsc);
-            this.classEntity.Students.sort(sort);
+        //else {
+        //    if (this.sortAsc) {
+        //        $("#students .table-green-header th").last().addClass("headerSortUp");
+        //        this.sortAsc = false;
+        //    } else {
+        //        $("#students .table-green-header th").last().addClass("headerSortDown");
+        //        this.sortAsc = true;
+        //    }
+        //    var sort = CompareHelper.createComparer("EducationGrade", this.sortAsc);
+        //    this.classEntity.Students.sort(sort);
 
-        }
+        //}
     }
 
     sortDoc(sortby: string) {

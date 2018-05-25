@@ -27,6 +27,7 @@
             'reflect-metadata': 'npm:reflect-metadata/Reflect.js',
             'kurvejs': 'npm:kurvejs/dist/kurve.js',
             'ng2-validation': 'npm:ng2-validation/dist',
+            'ng2-file-upload': 'npm:ng2-file-upload',
             'moment': 'npm:moment/moment.js'
         },
         // packages tells the System loader how to load when no filename and/or no extension
@@ -45,6 +46,10 @@
             'ng2-validation': {
                 main: './index.js',
                 directives: './directives/',
+                defaultExtension: 'js'
+            },
+            'ng2-file-upload': {
+                main: './index.js',
                 defaultExtension: 'js'
             },
             dist: {

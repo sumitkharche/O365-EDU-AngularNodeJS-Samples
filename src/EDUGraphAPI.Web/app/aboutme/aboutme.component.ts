@@ -7,11 +7,11 @@ import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { Inject } from '@angular/core';
 import { UserInfo } from '../models/common/userInfo';
 import { AboutMeModel } from './aboutme';
-import { ClassesModel } from '../school/classes';
+import { EducationClass } from '../models/educationclass';
+import { UserModel } from '../models/user';
 import { MapUtils } from '../utils/jsonHelper';
 import { Constants } from '../constants';
 import { SchoolService } from '../school/school.service';
-import { UserModel } from '../school/user';
 import { UserPhotoService } from '../services/userPhotoService';
 
 @Component({
@@ -71,14 +71,14 @@ export class AboutMe implements OnInit {
                 }
             });
 
-        this.aboutMeservice
+        this.schoolService
             .getMyClasses()
             .subscribe((result) => {
                 if (this.model.Groups === undefined) {
                     this.model.Groups = new Array<string>();
                 }
                 result.forEach((obj) => {
-                    var classModel = MapUtils.deserialize(ClassesModel, obj);
+                    var classModel = MapUtils.deserialize(EducationClass, obj);
                     this.model.Groups.push(classModel.DisplayName);
                 });
             });

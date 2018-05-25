@@ -4,7 +4,7 @@
 */
 import { Constants } from '../constants';
 import { DbContext, TokenCacheInstance, TokenCacheAttributes } from '../data/dbContext';
-import { TokenCacheService } from '../services/TokenCacheService';
+import { TokenCacheService } from '../services/tokenCacheService';
 import * as Promise from "bluebird";
 
 var AuthenticationContext = require('adal-node').AuthenticationContext;

@@ -86,7 +86,12 @@ goto :EOF
 :: ----------
 
 :Deployment
-echo Handling node.js deployment.
+
+echo Deploying the Web App.
+
+:: 0. Fix issue: Node.js deployment succeeds but doesn't work if server.js/app.js doesn't exist at deployment
+:: https://github.com/projectkudu/kudu/issues/1753
+touch "%DEPLOYMENT_SOURCE%\app.js"
 
 :: 1. KuduSync
 IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (

@@ -44,8 +44,8 @@ export class UserService {
     }
 
 
-    public GetUserFavoriteColorByO365Email(o365Email: string) {
-        return this._http.get(this.usersAPIUrl + "/" + o365Email + this.favoriteColorURL, {})
+    public GetUserFavoriteColorByO365Id(o365Id: string) {
+        return this._http.get(this.usersAPIUrl + "/" + o365Id + this.favoriteColorURL, {})
             .map((response: Response) => response.json());
     }
 }

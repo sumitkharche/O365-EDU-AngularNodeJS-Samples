@@ -31,6 +31,7 @@ The sample demonstrates:
 - Getting schools, sections, teachers, and students from Office 365 Education:
 
   - [Office 365 Schools REST API reference](https://msdn.microsoft.com/office/office365/api/school-rest-operations)
+  - A [Differential Query](https://msdn.microsoft.com/en-us/library/azure/ad/graph/howto/azure-ad-graph-api-differential-query) is used to sync data that is cached in a local database by the SyncData Web Job.
 
 EDUGraphAPI is based on NodeJS (the server-side) and Angular 2 (the client-side).
 
@@ -44,15 +45,72 @@ EDUGraphAPI is based on NodeJS (the server-side) and Angular 2 (the client-side)
 
   - One of the following browsers: Edge, Internet Explorer 9, Safari 5.0.6, Firefox 5, Chrome 13, or a later version of one of these browsers.
 
-  Additionally: Developing/running this sample locally requires the following:  
+  Additionally: Developing/running this sample locally requires the following:
 
-  - Visual Studio 2015 (any edition), [Visual Studio 2015 Community](https://go.microsoft.com/fwlink/?LinkId=691978&clcid=0x409) is available for free.
-  - [TypeScript for Visual Studio 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48593)
-  - [Node.js](https://nodejs.org/)
-  - [Node.js Tools 1.2](http://aka.ms/ntvs1.2.RTW.2015)
+  - Visual Studio 2017 (any edition) with Node.js deployment components installed.
+
+    ![](Images/vs-node.png)
+
+    [Visual Studio 2017 Community](https://www.visualstudio.com/downloads/) is available for free.
+
   - [Git](https://git-scm.com/download/win)
-  - Familiarity with Node.js, TypeScript, Angular and web services.
 
+  - [Node.js](https://nodejs.org/)
+
+  - [TypeScript SDK 2.5.2](http://download.microsoft.com/download/7/0/A/70A6AC0E-8934-4396-A43E-445059F430EA/2.5.2-TS-release-dev14update3-20170830.5/TypeScript_SDK.exe)
+
+  - [MySQL](https://www.mysql.com/)
+
+  - Familiarity with Node.js, TypeScript, AngularJS and web services.
+
+## Generate a self-signed certificate
+
+A self-signed certificate is required by the SyncData WebJob. For preview, you may skip the steps below and use the default certificate we provided:
+
+- Certificate file: `/src/EDUGraphAPI.SyncData/app_only_cert.pfx`
+- Password: `J48W23RQeZv85vj`
+- Key credential: `/src/EDUGraphAPI.SyncData/key_credential.txt`
+
+For production, you should use your own certificate:
+
+1. Generate certificate with PowerShell
+
+   Run PowerShell **as administrator**, then execute the commands below:
+
+   ```powershell
+   $cert = New-SelfSignedCertificate -Type Custom -KeyExportPolicy Exportable -KeySpec Signature -Subject "CN=Edu App-only Cert" -NotAfter (Get-Date).AddYears(20) -CertStoreLocation "cert:\CurrentUser\My" -KeyLength 2048
+   ```
+
+   > Note: please keep the PowerShell window open until you finish the steps below.
+
+2. Get keyCredential
+
+   Execute the commands below to get keyCredential:
+
+   > Note: Feel free to change the file path at the end of the command.
+
+   ```powershell
+   $keyCredential = @{}
+   $keyCredential.customKeyIdentifier = [System.Convert]::ToBase64String($cert.GetCertHash())
+   $keyCredential.keyId = [System.Guid]::NewGuid().ToString()
+   $keyCredential.type = "AsymmetricX509Cert"
+   $keyCredential.usage = "Verify"
+   $keyCredential.value = [System.Convert]::ToBase64String($cert.GetRawCertData())
+   $keyCredential | ConvertTo-Json > c:\keyCredential.txt
+   ```
+
+   The keyCredential is in the generated file, and will be used to create App Registrations in AAD.
+
+   ![cert-key-credential](Images/cert-key-credential.png)
+
+3. Export the certificate
+
+   ```powershell
+   $password = Read-Host -Prompt "Enter password" -AsSecureString
+   Export-PfxCertificate -Cert $cert -Password $password -FilePath c:\app_only_cert.pfx
+   ```
+
+   It will promote you to input a password. Keep the password and the exported certificate.
 
 
 ## Register the application in Azure Active Directory
@@ -69,21 +127,15 @@ EDUGraphAPI is based on NodeJS (the server-side) and Angular 2 (the client-side)
 
 4. Input a **Name**, and select **Web app / API** as **Application Type**.
 
-   Input **Sign-on URL**: https://localhost:44380/
+   Input **Sign-on URL**: `https://localhost:44380/*`
 
    ![](Images/aad-create-app-02.png)
 
    Click **Create**.
 
-5. Once completed, the app will show in the list.
-
-   ![](/Images/aad-create-app-03.png)
-
-6. Click it to view its details. 
-
    ![](/Images/aad-create-app-04.png)
 
-7. Click **All settings**, if the setting window did not show.
+5. Click **Settings**.
 
    - Click **Properties**, then set **Multi-tenanted** to **Yes**.
 
@@ -93,12 +145,14 @@ EDUGraphAPI is based on NodeJS (the server-side) and Angular 2 (the client-side)
 
    - Click **Required permissions**. Add the following permissions:
 
-     | API                            | Application Permissions | Delegated Permissions                    |
-     | ------------------------------ | ----------------------- | ---------------------------------------- |
-     | Microsoft Graph                | Read directory data     | Read all users' full profiles<br>Read directory data<br>Read directory data<br>Access directory as the signed in user<br>Sign users in |
-     | Windows Azure Active Directory |                         | Sign in and read user profile<br>Read and write directory data |
+     | API                            | Application Permissions       | Delegated Permissions                                        |
+     | ------------------------------ | ----------------------------- | ------------------------------------------------------------ |
+     | Microsoft Graph                | Read all users' full profiles | Read directory data<br>Access directory as the signed in user<br>Sign users in<br> Have full access to all files user can access<br> Have full access to user files<br> Read and write users' class assignments and their grades<br>Read users' view of the roster <br>Read all groups |
+     | Windows Azure Active Directory |                               | Sign in and read user profile<br>Read and write directory data |
 
      ![](/Images/aad-create-app-06.png)
+
+     ​
 
    - Click **Keys**, then add a new key:
 
@@ -108,34 +162,62 @@ EDUGraphAPI is based on NodeJS (the server-side) and Angular 2 (the client-side)
 
    Close the Settings window.
 
+6. Add  keyCredential
+
+     * Click **Manifest**.
+
+     ![](Images/aad-create-app-08.png)
+
+     * Copy the keyCredential (all the text) from `key_credential.txt` file.
+     * Insert the keyCredential into the square brackets of the **keyCredentials** node. ![](Images/aad-create-app-09.png)
+
+     * Click **Save**.
+
+
 ## Build and debug locally
 
-This project can be opened with the edition of Visual Studio 2015 you already have, or download and install the Community edition to run, build and/or develop this application locally.
+This project can be opened with the edition of Visual Studio 2017 you already have, or download and install the Community edition to run, build and/or develop this application locally.
 
-- [Visual Studio 2015 Community](https://go.microsoft.com/fwlink/?LinkId=691978&clcid=0x409)
+### Preparation
 
-The following tools are also required:
+1. Clone or download the repository to your local computer. 
+2. Replace `/src/EDUGraphAPI.SyncData/app_only_cert.pfx` with your certificate if you plan to use yours.
+3. Open `/src/EDUGraphAPI-Phase2.sln` with Virtual Studio 2017.
+4. Create a schema named **edu** in your MySQL server.
 
-- [TypeScript for Visual Studio 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48593)
-- [Node.js](https://nodejs.org/)
-- [Node.js Tools 1.2](http://aka.ms/ntvs1.2.RTW.2015)
-- [Git](https://git-scm.com/download/win)
+### Debug EDUGraphAPI.Web
 
-Debug the **EDUGraphAPI.Web**:
+1. Right-click the **EDUGraphAPI.Web** in Solutions Explorer, then click **Set as StartUp Project**.
 
-1. Configure **Environment Variables**. Right-click the project in Solution Explorer, then click **Properties**.
+2. Configure **Environment Variables**. Right-click the project in Solution Explorer, then click **Properties**.
 
    ![](/Images/web-app-properties.png)
 
    - **clientId**: use the Client Id of the app registration you created earlier.
    - **clientSecret**: use the Key value of the app registration you created earlier.
-   - **SourceCodeRepositoryURL**: use the repository URL of your fork.
+   - **sourceCodeRepositoryURL**: use the repository URL of your fork.
+   - **MySQLDbName**: keep the default value.
+   - **MySQLHost**/**MySQLPort**: the host and port of the MySQL server.
+   - **MySQLUser**/**MySQLPassword**: the user and password of the MySQL server.
 
-2. In the Solution Explorer, right-click **npm**, then click **Install Missing npm Packages**:
+3. In the Solution Explorer, right-click **npm** under the project, then click **Install Missing npm Packages**:
 
    ![](/Images/install-missing-npm-packages.png)
 
-3. Press **F5**. 
+4. Press **F5**. 
+
+### Debug EDUGraphAPI.SyncData
+
+1. Right-click the **EDUGraphAPI.SyncData** in Solutions Explorer, then click **Set as StartUp Project**.
+2. Configure **Environment Variables**. Right-click the project in Solution Explorer, then click **Properties**.
+   * **clientId**: use the Client Id of the app registration you created earlier.
+   * **clientCertificatePath**: keep the default value.
+   * **clientCertificatePassword**: use the password of the certificate.
+   * **MySQLDbName**: keep the default value.
+   * **MySQLHost**/**MySQLPort**: the host and port of the MySQL server.
+   * **MySQLUser**/**MySQLPassword**: the user and password of the MySQL server.
+3. In the Solution Explorer, right-click **npm** under the project, then click **Install Missing npm Packages**.
+4. Press **F5**.
 
 ## Deploy the sample to Azure
 
@@ -171,15 +253,15 @@ Debug the **EDUGraphAPI.Web**:
 
 **Deploy the Azure Components from GitHub**
 
-1. Check to ensure that the build is passing VSTS Build.
+1. Fork this repository to your GitHub account.
 
-2. Fork this repository to your GitHub account.
+2. Replace `/src/EDUGraphAPI.SyncData/app_only_cert.pfx` with your certificate if you plan to use yours.
 
 3. Click the Deploy to Azure Button:
 
-   [![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FOfficeDev%2FO365-EDU-AngularJS-Samples%2Fmaster%2Fazuredeploy.json)
+   [![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FOfficeDev%2FO365-EDU-AngularNodeJS-Samples%2Fmaster%2Fazuredeploy.json)
 
-4. Fill in the values in the deployment page and select the **I agree to the terms and conditions stated above** checkbox.
+4. Fill in the values in the deployment page:
 
    ![](Images/azure-auto-deploy.png)
 
@@ -195,6 +277,10 @@ Debug the **EDUGraphAPI.Web**:
      >
      > In this case, please use another name.
 
+   - **My Sql Administrator Login**: The administrator login of the MySQL.
+
+   - **My Sql Administrator Login Password**: The administrator login password of the MySQL.
+
    - **Source Code Repository URL**: replace <YOUR REPOSITORY> with the repository name of your fork.
 
    - **Source Code Manual Integration**: choose **false**, since you are deploying from your own fork.
@@ -203,11 +289,15 @@ Debug the **EDUGraphAPI.Web**:
 
    - **Client Secret**: use the Key value of the app registration you created earlier.
 
+   - **Client Certificate Path**: keep the default value `./app_only_cert.pfx`.
+
+   - **Client Certificate Password**: password of the certificate.
+
    - Check **I agree to the terms and conditions stated above**.
 
 5. Click **Purchase**.
 
-**Add REPLY URL to the app registration**
+**Add Reply URL to the app registration**
 
 1. After the deployment, open the resource group:
 
@@ -217,15 +307,13 @@ Debug the **EDUGraphAPI.Web**:
 
    ![](Images/azure-web-app.png)
 
-   Copy the URL aside and change the schema to **https**. This is the replay URL and will be used in next step.
+   Copy the URL aside, then append `/*` . We get a new reply URL `https://edugraphapi.azurewebsites.net/*`.
 
 3. Navigate to the app registration in the new Azure Portal, then open the setting windows.
 
    Add the reply URL:
 
    ![](Images/aad-add-reply-url.png)
-
-   > Note: to debug the sample locally, make sure that https://localhost:44380/ is in the reply URLs.
 
 4. Click **SAVE**.
 
@@ -240,7 +328,7 @@ Debug the **EDUGraphAPI.Web**:
 The top layer of the solution contains the two parts of the EDUGraphAPI.Web project:
 
 * The server-side Node.js app.
-* The client side Angular 2 app.
+* The client-side Angular 2 app.
 
 The bottom layers contain the three data sources.
 
@@ -282,7 +370,7 @@ These APIs are defined in the **/routes** folder.
 
 **Data Access**
 
-[Sequelize](http://docs.sequelizejs.com/en/v3/) is used in this sample to access data from a SQL Database. 
+[Sequelize](http://docs.sequelizejs.com/en/v3/) is used in this sample to access data from a SQL Database. MySQL is used as the database. 
 
 The **DbContext** exposes the models and methods that are used to access data.
 
@@ -384,13 +472,13 @@ The **EducationServiceClient** is the core class of the library. It is used to e
 
 ~~~typescript
 getSchools(): Observable<any[]> {
-    return this.dataService.getArray<any>(this.urlBase + "/administrativeUnits");
+     return this.dataService.getArray<any>(this.urlBase + "/education/schools");
 }
 ~~~
 
 ~~~typescript
 getSchoolById(id: string): Observable<any> {
-    return this.dataService.getObject(this.urlBase + '/administrativeUnits/' + id );
+   return this.dataService.getObject(this.urlBase + '/education/schools/' + id );
 }
 ~~~
 
@@ -398,30 +486,48 @@ getSchoolById(id: string): Observable<any> {
 
 ~~~typescript
 getClasses(schoolId: string, nextLink: string): Observable<PagedCollection<any>> {
-    let url: string = this.urlBase + "/groups?$top=12&$filter=extension_fe2174665583431c953114ff7268b7b3_Education_ObjectType%20eq%20'Section'%20and%20extension_fe2174665583431c953114ff7268b7b3_Education_SyncSource_SchoolId%20eq%20'" + schoolId + "'" + (nextLink ? "&" + GraphHelper.getSkipToken(nextLink) : '');
-    return this.dataService.getPagedCollection<any>(url);
+    let url: string = `${this.urlBase}/education/schools/${schoolId}/classes?$top=12` +
+            (nextLink ? "&" + GraphHelper.getSkipToken(nextLink) : '');
+        return this.dataService.getPagedCollection<any>(url);
 }
 ~~~
 
 ```typescript
 getClassById(classId: string): Observable<any> {
-    return this.dataService.getObject<any>(this.urlBase + "/groups/" + classId + "?$expand=members");
+    return this.dataService.getObject<any>(this.urlBase + "/education/classes/" + classId + "?$expand=members");
 }
 ```
-**Get users**
+**Get assignments**
 
 ```typescript
-getUsers(schoolId: string, nextLink: string): Observable<PagedCollection<any>> {
-    var url = this.urlBase + "/administrativeUnits/" + schoolId + "/members?$top=12" +
-  (nextLink ? "&" + GraphHelper.getSkipToken(nextLink) : '');
-    return this.dataService.getPagedCollection<any>(url);
+getAssignmentsByClassId(classId: string): Observable<any[]> {
+        return this.dataService.getArray<any>(`${this.urlBase}/education/classes/${classId}/assignments`);
+    }
+```
+```typescript
+createAssignment(assignment: Assignment): Observable<any> {
+    let data = {
+        "dueDateTime": assignment.DueDateTime,
+        "displayName": assignment.DisplayName,
+        "status": assignment.Status,
+        "allowStudentsToAddResourcesToSubmission": true,
+        "assignTo": {
+            "@odata.type": "#microsoft.education.assignments.api.educationAssignmentClassRecipient"
+        }
+    };
+    return this.dataService.postToGraph(`${this.urlBase}/education/classes/${assignment.ClassId}/assignments`, data);
 }
 ```
+
+```typescript
+publishAssignment(assignment: Assignment): Observable<any> {
+    return this.dataService.postToGraph(`${this.urlBase}/education/classes/${assignment.ClassId}/assignments/${assignment.Id}/publish`, null);
+}
+```
+
 Below are some screenshots of the sample app that show the education data.
 
 ![](Images/edu-schools.png)
-
-![](Images/edu-users.png)
 
 ![](Images/edu-classes.png)
 
@@ -461,6 +567,18 @@ This flow is implemented in the AdminController.
 
 ![](Images/auth-flow-admin-login.png)
 
+**Application Authentication Flow**
+
+This flow is implemented in the SyncData WebJob.
+
+![](/Images/auth-flow-app-login.png)
+
+An X509 certificate is used. For more details, please check the following links:
+
+- [Daemon or Server Application to Web API](https://docs.microsoft.com/en-us/azure/active-directory/active-directory-authentication-scenarios#daemon-or-server-application-to-web-api)
+- [Authenticating to Azure AD in daemon apps with certificates](https://azure.microsoft.com/en-us/resources/samples/active-directory-dotnet-daemon-certificate-credential/)
+- [Build service and daemon apps in Office 365](https://msdn.microsoft.com/en-us/office/office365/howto/building-service-apps-in-office-365)
+
 ### Two Kinds of Graph APIs
 
 There are two distinct Graph APIs used in this sample:
@@ -495,6 +613,24 @@ public getMe(): Promise<any> {
 Note that in the AAD Application settings, permissions for each Graph API are configured separately:
 
 ![](Images/aad-create-app-06.png) 
+
+### Differential Query
+
+A [differential query](https://msdn.microsoft.com/en-us/Library/Azure/Ad/Graph/howto/azure-ad-graph-api-differential-query) request returns all changes made to specified entities during the time between two consecutive requests. For example, if you make a differential query request an hour after the previous differential query request, only the changes made during that hour will be returned. This functionality is especially useful when synchronizing tenant directory data with an application’s data store.
+
+The related code is in the **EDUGraphAPI.SyncData** project which is deployed as SyncData WebJob.
+
+Below is the log generated by the SyncData WebJob:
+
+~~~
+[05/23/2018 06:26:07 > 4a686b: INFO] Starting to sync users for the Canviz EDU organization.
+[05/23/2018 06:26:07 > 4a686b: INFO] 	Executing Differential Query
+[05/23/2018 06:26:07 > 4a686b: INFO] 	Get 1 user(s).
+[05/23/2018 06:26:07 > 4a686b: INFO] 	 	Job title: CTO
+[05/23/2018 06:26:07 > 4a686b: INFO] 	 	Department: DEV
+[05/23/2018 06:26:07 > 4a686b: INFO] 	 	Mobile phone: +1 2222****
+[05/23/2018 06:26:07 > 4a686b: INFO] 	Updating user: admin@canvizedu.onmicrosoft.com
+~~~
 
 ## Questions and comments
 

@@ -10,7 +10,7 @@ import { AuthHelper } from "../authHelper/authHelper";
 import { MeService } from "../services/meService";
 import { Cookie } from "../services/cookieService";
 import { SchoolService } from '../school/school.service';
-import { UserModel } from '../school/user';
+import { UserModel } from '../models/user';
 import { MapUtils } from '../utils/jsonHelper';
 import { UserPhotoService } from '../services/userPhotoService';
 
@@ -63,19 +63,10 @@ export class Header implements OnInit {
 
     getSchoolId() {
         let urlParts = this.urlParts();
-        if (urlParts.length == 3 && (urlParts[0].toLowerCase() == "classes" || urlParts[0].toLowerCase() == "users" || urlParts[0].toLowerCase() == "myclasses"))
+        if (urlParts.length == 2 && (urlParts[0].toLowerCase() == "classes" || urlParts[0].toLowerCase() == "users" || urlParts[0].toLowerCase() == "myclasses"))
             return urlParts[1];
-        if (urlParts.length == 4 && (urlParts[0].toLowerCase() == "classdetail"))
+        if (urlParts.length == 3 && (urlParts[0].toLowerCase() == "classdetail"))
             return urlParts[1];
-        return '';
-    }
-
-    getSchoolIdAlias() {
-        let urlParts = this.urlParts();
-        if (urlParts.length == 3 && (urlParts[0].toLowerCase() == "classes" || urlParts[0].toLowerCase() == "users" || urlParts[0].toLowerCase() == "myclasses"))
-            return urlParts[2];
-        if (urlParts.length == 4 && (urlParts[0].toLowerCase() == "classdetail"))
-            return urlParts[3];
         return '';
     }
 

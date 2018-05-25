@@ -14,8 +14,15 @@
     <Environment>WEBSITE_HOSTNAME=localhost:44380
 clientId=
 clientSecret=
-sourceCodeRepositoryUrl=
-SQLiteDB=database.sqlite</Environment>
+sourceCodeRepositoryUrl=https://github.com/OfficeDev/O365-EDU-AngularNodeJS-Samples
+MySQLDbName=edu
+MySQLHost=
+MySQLPort=3306
+MySQLUser=
+MySQLPassword=</Environment>
+    <LastActiveSolutionConfig>Debug|Any CPU</LastActiveSolutionConfig>
+    <ToolsVersionPromptShown>0.0</ToolsVersionPromptShown>
+    <TypeScriptToolsVersion>2.5</TypeScriptToolsVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -30,7 +37,7 @@ SQLiteDB=database.sqlite</Environment>
     <OutputPath>.</OutputPath>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
-    <ProjectView>ProjectFiles</ProjectView>
+    <ProjectView>ShowAllFiles</ProjectView>
     <NodejsPort>44380</NodejsPort>
     <TypeScriptSourceMap>true</TypeScriptSourceMap>
     <TypeScriptModuleKind>CommonJS</TypeScriptModuleKind>
@@ -83,28 +90,32 @@ SQLiteDB=database.sqlite</Environment>
     <TypeScriptCompile Include="app\link\link.ts" />
     <TypeScriptCompile Include="app\login\login.component.ts" />
     <TypeScriptCompile Include="app\main.ts" />
+    <TypeScriptCompile Include="app\models\assignment.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="app\models\common\colorEntity.ts" />
     <TypeScriptCompile Include="app\models\common\organization.ts" />
     <TypeScriptCompile Include="app\models\common\userInfo.ts" />
     <TypeScriptCompile Include="app\home.component.ts" />
+    <TypeScriptCompile Include="app\models\conversation.ts" />
+    <TypeScriptCompile Include="app\models\document.ts" />
+    <TypeScriptCompile Include="app\models\education.ts" />
+    <TypeScriptCompile Include="app\models\educationclass.ts" />
+    <TypeScriptCompile Include="app\models\educationschool.ts" />
+    <TypeScriptCompile Include="app\models\educationuser.ts" />
+    <TypeScriptCompile Include="app\models\seatingarrangements.ts" />
+    <TypeScriptCompile Include="app\models\user.ts" />
     <TypeScriptCompile Include="app\O365login\O365login.component.ts" />
     <TypeScriptCompile Include="app\register\register.component.ts" />
     <TypeScriptCompile Include="app\register\register.ts" />
     <TypeScriptCompile Include="app\school\classdetail.component.ts" />
     <TypeScriptCompile Include="app\school\classes.component.ts" />
-    <TypeScriptCompile Include="app\school\classes.ts" />
-    <TypeScriptCompile Include="app\school\conversation.ts" />
     <TypeScriptCompile Include="app\school\customdirectives.ts" />
-    <TypeScriptCompile Include="app\school\document.ts" />
     <TypeScriptCompile Include="app\school\myclasses.component.ts" />
     <TypeScriptCompile Include="app\school\school-routing.ts" />
     <TypeScriptCompile Include="app\school\school.component.ts" />
     <TypeScriptCompile Include="app\school\school.module.ts" />
     <TypeScriptCompile Include="app\school\school.service.ts" />
-    <TypeScriptCompile Include="app\school\school.ts" />
-    <TypeScriptCompile Include="app\school\seatingarrangements.ts" />
-    <TypeScriptCompile Include="app\school\user.ts" />
-    <TypeScriptCompile Include="app\school\users.component.ts" />
     <TypeScriptCompile Include="app\services\cookieService.ts" />
     <TypeScriptCompile Include="app\services\dataService.ts" />
     <TypeScriptCompile Include="app\utils\jsonHelper.ts" />
@@ -135,6 +146,7 @@ SQLiteDB=database.sqlite</Environment>
     <Content Include="app\app.component.css" />
     <Content Include="app\app.component.template.html" />
     <Content Include="app\css\bootstrap.min.css" />
+    <Content Include="app\css\jquery-ui.css" />
     <Content Include="app\css\Site.css" />
     <Content Include="app\demoHelper\demoHelper-pages.json" />
     <Content Include="app\demoHelper\demoHelper.component.template.html" />
@@ -209,10 +221,10 @@ SQLiteDB=database.sqlite</Environment>
     <Content Include="app\school\classes.component.template.html" />
     <Content Include="app\school\myclasses.component.template.html" />
     <Content Include="app\school\school.component.template.html" />
-    <Content Include="app\school\users.component.template.html" />
     <Content Include="app\tabs\tab.html" />
     <Content Include="app\tabs\tabs.css" />
     <Content Include="app\tabs\tabs.html" />
+    <Content Include="BaltimoreCyberTrustRoot.crt.pem" />
     <Content Include="deploy.cmd" />
     <Content Include="Index.prod.html" />
     <Content Include="Index.html" />

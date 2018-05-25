@@ -12,26 +12,37 @@
         </div>
         <div class="container">
             <div class="a-heading ">Class Details</div>
-            <div class="b-title" *ngIf="classEntity">{{classEntity.CourseNumber}} | {{classEntity.DisplayName}}</div>
+            <div class="b-title" *ngIf="classEntity">{{classEntity.ClassCode}} | {{classEntity.DisplayName}}</div>
         </div>
         <div class="container coursedetail" *ngIf="classEntity">
             <div class="col-md-6">
-                <span>Course Name:</span> {{classEntity.CourseName}}
-                <br />
-                <span>Description:</span> {{classEntity.CourseDescription}}
-                <br />
-                <span>Period:</span> {{classEntity.Period}}
-                <br />
-                <span>Term Name:</span> {{classEntity.TermName}}
+                <span>Term Name:</span> {{classEntity.Term.DisplayName}}
                 <br />
                 <span>Start/Finish Date:</span>
-                <span id="termdate">{{classEntity.TermStartDate}}</span>
+                <span id="termdate">{{classEntity.Term.StartDate}}</span>
                 <span id="termdate-separator"> - </span>
-                <span id="termdate">{{classEntity.TermEndDate}}</span>
+                <span id="termdate">{{classEntity.Term.EndDate}}</span>
             </div>
             <div class="col-md-6">
-                <div *ngFor="let user of classEntity.Teachers">
-                    <span>Teacher:</span> {{user.DisplayName}}
+                <span>Teacher:</span>
+                <span *ngFor="let user of classEntity.Teachers; let i= index"  class="coteacher-name">
+                    <span *ngIf="i < classEntity.Teachers.length - 1">{{user.DisplayName}},</span>
+                    <span *ngIf="i == classEntity.Teachers.length - 1">{{user.DisplayName}}</span>
+                 </span>
+                <a *ngIf="me?.ObjectType=='Teacher'" id="addateacher" (click)="switchSchoolteachers(true)">Add a teacher</a>
+            </div>
+            <div class="schoolteachers" *ngIf="me?.ObjectType=='Teacher'"  [hidden]="!showSchoolteachers">
+                <div class="close" (click)="switchSchoolteachers(false)" ><img src="/app/Images/close.png"></div>
+                <div class="title">Select a teacher</div>
+                <div class="list">
+                    <ul *ngIf="schoolTeachers.length > 0">
+                        <li *ngFor="let teacher of schoolTeachers">
+                            <a (click)="addCoTeacher(teacher.O365UserId)">
+                                <img [src]="teacher.Photo || 'app/images/header-default.jpg'"> {{teacher.DisplayName}}
+                            </a>
+                        </li>
+                    </ul>
+                    <div *ngIf="schoolTeachers.length == 0"> There is no data available at this time.</div>
                 </div>
             </div>
         </div>
@@ -46,7 +57,6 @@
                             <thead>
                                 <tr class="table-green-header">
                                     <th class="header headerSortDown" (click)="sortStu('name')">student name</th>
-                                    <th class="header" (click)="sortStu('grade')">grade</th>
                                 </tr>
                             </thead>
                             <tbody *ngIf="classEntity">
@@ -54,10 +64,183 @@
                                     <td>
                                         <img [src]="stu.Photo || 'app/images/header-default.jpg'"> {{stu.DisplayName}}
                                     </td>
-                                    <td>{{stu.EducationGrade}}</td>
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                </tab>
+                <tab [tabTitle]="'Assignments'" [tabHash]="'#assignments'">
+                    <div id="assignments" class="tab-pane">
+                        <div *ngIf="me?.ObjectType !='Student'" class="addassignment">
+                            <a href="javascript:void(0)" (click)="showNewAssignment()"> + New</a>
+                        </div>
+                        <div id="assignmentslist">
+                            <div class="nodata" *ngIf="!assignments || assignments.length == 0"> There is no data available for this page at this time.</div>
+                            <table *ngIf="assignments && assignments.length > 0" class="table  table-green table-student ">
+                                <thead>
+                                    <tr class="table-green-header">
+                                        <th class="header">Name</th>
+                                        <th class="header">Due Date</th>
+                                        <th class="header">Status</th>
+                                        <th class="header">Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="tr-content" *ngFor="let assignment of assignments">
+                                        <td>{{assignment.DisplayName}}</td>
+                                        <td>{{assignment.DueDateTime}}</td>
+                                        <td>{{assignment.Status}}</td>
+                                        <td>
+                                            <a class="detaillink" (click)="showAssignmentDetail(assignment)">Details</a>
+                                            <span *ngIf="me?.ObjectType !='Student' && assignment.Status != 'draft'">|</span>
+                                            <a *ngIf="me?.ObjectType !='Student' && assignment.Status != 'draft'" (click)="showAssignmentSubmissions(assignment)">Submissions</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                       <div class="modal fade" id="new-assignment-form" role="dialog" >
+                           <div class="modal-dialog" role="document">
+                               <div class="modal-content">
+                                   <div class="alert alert-danger assignment-alert" *ngIf="assignmentShowAlert" (click)="switchAlert(false)">
+                                       <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                       <span>{{assignmentAlertMessage}}</span>
+                                   </div>
+                                   <div class="modal-body">
+                                       <br/>
+                                       <fieldset>
+                                           <label>Name</label>
+                                           <input [(ngModel)]="assignmentDetail.DisplayName" #name="ngModel" class="text ui-widget-content ui-corner-all" id="name" name="name" type="text">
+                                           <br />
+                                           <label>Due Date</label>
+                                           <input type="text" id="duedate" name="duedate" value="" class="text ui-widget-content ui-corner-all">
+                                           <select name="duetime" id="duetime" class="ui-widget-content ui-corner-all" [(ngModel)]="dueTime">
+                                               <option *ngFor="let duetime of duetimeArray" [value]="duetime">{{duetime}}</option>
+                                           </select>
+                                           <br/>
+                                           <div class="uploadcontainer">
+                                               <label>Resources</label>
+                                               <div id="uploaders">
+                                                   <input type="file" [disabled]="disableActionButton" ng2FileSelect [uploader]="uploader" multiple/>
+                                               </div>
+                                           </div>
+                                           <br />
+                                           <div id="selectedFiles">
+                                               <div *ngFor="let item of uploader.queue"><span>{{item?.file?.name}}</span></div>
+                                           </div>
+                                       </fieldset>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary btn-cancel" data-dismiss="modal" [disabled]="disableActionButton">Cancel</button>
+                                        <button type="button" class="btn btn-primary btn-save" (click)="createNewAssignment('draft')"  [disabled]="disableActionButton">Save As Draft</button>
+                                        <button type="button" class="btn btn-primary btn-publish"  (click)="createNewAssignment('assigned')"  [disabled]="disableActionButton">Assign</button>
+                                    </div>
+                                </div>
+                           </div>
+                       </div>
+                       <div class="modal fade assignment-detail-modal" id="assignment-detail-form" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="alert alert-danger assignment-alert" *ngIf="assignmentShowAlert" (click)="switchAlert(false)">
+                                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                        <span>{{assignmentAlertMessage}}</span>
+                                    </div>
+
+                                    <div class="modal-body" *ngIf="me?.ObjectType !='Student'">
+                                        <div><h5 class="assignment-title">{{assignmentDetail.DisplayName}}</h5></div>
+                                        <div><h5 class="due-date">Due Date: {{assignmentDetail.DueDateTime}}</h5></div>
+
+                                        <div class="row resource-upload">
+                                            <h5 class="resources-title col-md-8">Resources for {{assignmentDetail.DisplayName}}</h5>
+                                            <button type="button" class="btn btn-primary btn-new" (click)="newResourceForAssignment.click()" [disabled]="disableActionButton">+ New</button>
+                                            <input type="file" #newResourceForAssignment class="hidden" ng2FileSelect [uploader]="uploader" multiple/>
+                                        </div>
+                                        <ul class="resource-list">
+                                            <li *ngFor="let reource of assignmentDetail.Resources">
+                                                {{reource.Resource.DisplayName}}
+                                            </li>
+                                            <li *ngFor="let item of uploader.queue">
+                                                {{item?.file?.name}}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="modal-footer" *ngIf="me?.ObjectType !='Student'">
+                                        <button type="button" class="btn btn-secondary btn-cancel" data-dismiss="modal" [disabled]="disableActionButton">Cancel</button>
+                                        <button type="button" class="btn btn-primary btn-save" *ngIf="assignmentDetail.Status == 'draft'" (click)="updateAssignment('draft')" [disabled]="disableActionButton">Save</button>
+                                        <button type="button" class="btn btn-primary btn-publish" *ngIf="assignmentDetail.Status == 'draft'" (click)="updateAssignment('assigned')" [disabled]="disableActionButton">Assign</button>
+                                        <button type="button" class="btn btn-primary btn-update" *ngIf="assignmentDetail.Status != 'draft'" (click)="updateAssignment(assignmentDetail.Status)" [disabled]="disableActionButton">Update</button>
+                                    </div>
+
+                                    <div class="modal-body"  *ngIf="me?.ObjectType =='Student'">
+                                        <div><h5 class="assignment-title">{{assignmentDetail.DisplayName}}</h5></div>
+                                        <div><h5 class="due-date">Due Date: {{assignmentDetail.DueDateTime}}</h5></div>
+                                        <div><h5 class="allow-late">Late turn-in allowed: {{assignmentDetail.AllowLateSubmissions?'Yes':'No'}}</h5></div>
+                                        <div class="row">
+                                            <h5 class="resources-title col-md-8">Resources for {{assignmentDetail.DisplayName}}</h5>
+                                        </div>
+                                        <ul class="resource-list">
+                                            <li *ngFor="let reource of assignmentDetail.Resources">
+                                                {{reource.Resource.DisplayName}}
+                                            </li>
+                                        </ul>
+                                        <div class="row resource-upload">
+                                            <h5 class="handin-title col-md-8">Hand ins for {{assignmentDetail.DisplayName}}</h5>
+                                            <button type="button" class="btn btn-primary btn-upload" (click)="handInResource.click()" [disabled]="disableActionButton">Upload</button>
+                                            <input type="file" #handInResource class="hidden"  ng2FileSelect [uploader]="uploader" multiple >
+                                        </div>
+                                        <ul class="handin-list" *ngIf="submissions?.length > 0">
+                                            <li *ngFor="let resource of submissions[0].Resources">
+                                                {{resource.Resource.DisplayName}}
+                                            </li>
+                                            <li *ngFor="let item of uploader.queue">
+                                                {{item?.file?.name}}
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="modal-footer"  *ngIf="me?.ObjectType =='Student'">
+                                        <button type="button" class="btn btn-secondary btn-cancel" data-dismiss="modal"  [disabled]="disabCancelButton">Cancel</button>
+                                        <button type="button" class="btn btn-primary btn-submit"  [disabled]="disableActionButton" (click)="newAssignmentSubmissionResource()">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       <div class="modal fade assignment-detail-modal" id="assignment-submissions-form" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <div><h3>Assignment Submissions</h3></div>
+                                        <div><h5 class="assignment-title">{{assignmentDetail.DisplayName}}</h5></div>
+                                        <div><h5 class="due-date">Due Date: {{assignmentDetail.DueDateTime}}</h5></div>
+                                        <div class="row">
+                                            <table class="table resource-list" id="assignment-submissions-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Submitted by</th>
+                                                        <th>Submitted On</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody *ngFor="let submission of submissions" >
+                                                    <tr>
+                                                        <td>{{submission.SubmittedBy.User.DisplayName}}</td>
+                                                        <td>{{submission.SubmittedDateTime}}</td>
+                                                    </tr>
+                                                    <tr *ngFor="let resource of submission.Resources">
+                                                        <td colspan='2' class='files'>{{resource.Resource.DisplayName}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary btn-update" data-dismiss="modal">Return to Assignments</button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </tab>
                 <tab tabTitle="Class Documents" [tabHash]="'#documents'">
@@ -95,7 +278,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <span class="see-more" *ngIf="oneDriveURL"><a href="{{oneDriveURL}}" target="_blank">See All</a></span>
+                        <span class="see-more" *ngIf="oneDriveURL"><a href="{{oneDriveURL}}" target="_blank">See More</a></span>
                         <br style="clear:both">
                     </div>
                 </tab>
@@ -118,7 +301,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <span class="see-more" *ngIf="classEntity"><a target="_blank" href="https://outlook.office.com/owa/?path=/group/{{classEntity.Email}}/mail&amp;exsvurl=1&amp;ispopout=0">See All</a></span>
+                        <span class="see-more" *ngIf="classEntity"><a target="_blank" href="https://outlook.office.com/owa/?path=/group/{{classEntity.Email}}/mail&amp;exsvurl=1&amp;ispopout=0">See More</a></span>
                         <br style="clear:both">
                     </div>
                 </tab>
@@ -126,18 +309,18 @@
                     <div id="seatingchart" class="tab-pane ">
                         <div class="left" id="dvleft">
                             <div *ngIf="me">
-                                <div class="tip" *ngIf="me.ObjectType=='Teacher'"> To assign seats for each student, drag and drop student profile icons below onto the seating map to the right.</div>
-                                <div class="tip" *ngIf="me.ObjectType=='Student'">
+                                <div class="tip" *ngIf="me?.ObjectType=='Teacher'"> To assign seats for each student, drag and drop student profile icons below onto the seating map to the right.</div>
+                                <div class="tip" *ngIf="me?.ObjectType=='Student'">
                                     <div class="assignseat tip"><div class="greenicon" style=""></div>Your assigned seat </div>
                                 </div>
                             </div>
                             <ul id="lstproducts" *ngIf="classEntity">
-                                <li *ngFor="let stu of classEntity.Students" id="{{stu.O365UserId}}">
+                                <li *ngFor="let stu of classEntity.Students" id="{{stu.Id}}">
                                     <img [src]="stu.Photo || 'app/images/header-default.jpg'"> <span class="disname"> {{stu.DisplayName}} </span> <span class="{{stu.SeatingClass}}">seated ✓</span>
                                 </li>
                             </ul>
                             <div id="hidtiles" class="hideitem" *ngIf="classEntity">
-                                <div *ngFor="let stu of classEntity.Students" [position]="stu.SeatingArrangment" [userid]="stu.O365UserId" [class]="stu.ContainerClass" [style.background-color]="stu.FavoriteColor">
+                                <div *ngFor="let stu of classEntity.Students" [position]="stu.SeatingArrangment" [userid]="stu.Id" [class]="stu.ContainerClass" [style.background-color]="stu.FavoriteColor">
                                     <div class="deskclose" [hidden]="!isEditing"><img src="/app/Images/close.png"></div>
                                     <div class="deskicon">
                                         <img [src]="stu.Photo || 'app/images/header-default.jpg'" />
@@ -157,7 +340,7 @@
                             </div>
                         </div>
                         <div id="dvedit" class="dvedit" *ngIf="me">
-                            <div *ngIf="me.ObjectType=='Teacher'">
+                            <div *ngIf="me?.ObjectType=='Teacher'">
                                 <img id="imgedit" src="/app/Images/edit.png" [hidden]="isEditing" (click)="editseats()">
                                 <img id="imgsave" src="/app/Images/save.png" [hidden]="!isEditing" (click)="saveeditseats()">
                                 <img id="imgcancel" src="/app/Images/cancel.png" [hidden]="!isEditing" (click)="canceleditseats()">

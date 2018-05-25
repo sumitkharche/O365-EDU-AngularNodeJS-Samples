@@ -6,7 +6,7 @@ import * as uuid from "node-uuid";
 import * as Promise from "bluebird";
 import * as bcrypt from 'bcryptjs';
 import { DbContext, UserInstance } from '../data/dbContext';
-import { TokenCacheService } from '../services/TokenCacheService';
+import { TokenCacheService } from '../services/tokenCacheService';
 import { MSGraphClient } from "../services/msGraphClient";
 import { AuthenticationHelper } from '../utils/authenticationHelper';
 import { Roles } from '../constants';
@@ -315,10 +315,9 @@ export class UserService {
             })
     }
 
-    public GetUserFavoriteColorByO365Email(o365Email: string): Promise<string> {
-        o365Email = o365Email.toLowerCase();
+    public GetUserFavoriteColorByO365Id(o365Id: string): Promise<string> {
         return this.dbContext.User
-            .findOne({ where: { o365Email: o365Email } })
+            .findOne({ where: { o365UserId: o365Id } })
             .then(user => {
                 if (user != null)
                     return user.favoriteColor;

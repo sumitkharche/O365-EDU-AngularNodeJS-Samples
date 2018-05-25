@@ -35,6 +35,10 @@
                 "description": "Retrieve current user's properties from MS Graph."
               },
               {
+                "title": "getJoinableUser",
+                "description": "Retrieve current education user's properties with schools and classes."
+              },
+              {
                 "title": "getSchools",
                 "description": "Get all schools that exist in the Azure Active Directory tenant."
               }
@@ -107,10 +111,6 @@
               {
                 "title": "getMyClasses",
                 "description": "Get my classes within a school."
-              },
-              {
-                "title": "getClassById",
-                "description": "Get class information by class id."
               }
             ]
           }
@@ -162,12 +162,12 @@
                 "description": "Retrieve current user's properties from MS Graph."
               },
               {
-                "title": "getMyClasses",
-                "description": "Get my classes within a school."
+                "title": "getMyClassesWithMembers",
+                "description": "Get my classes and members."
               },
               {
-                "title": "getClassById",
-                "description": "Get class information by class id."
+                "title": "getMyClassesWithSchools",
+                "description": "Get my classes and schools."
               }
             ]
           }
@@ -192,6 +192,10 @@
               {
                 "title": "gotoClasses",
                 "description": "Go to classes page."
+              },
+              {
+                "title": "addCoTeacher",
+                "description": "Add a teacher action."
               }
             ]
           },
@@ -207,8 +211,16 @@
                 "description": "Retrieve current user's properties from MS Graph."
               },
               {
-                "title": "getClassById",
-                "description": "Get class information by class id."
+                "title": "getAllTeachers",
+                "description": "Get teachers within a school."
+              },
+              {
+                "title": "addUserToSectionMembers",
+                "description": "Add a member to class."
+              },
+              {
+                "title": "addUserToSectionOwners",
+                "description": "Add a user to the class's owners."
               }
             ]
           },
@@ -244,7 +256,7 @@
             "url": "/blob/master/src/EDUGraphAPI.Web/app/school/school.service.ts",
             "methods": [
               {
-                "title": "getClassMembers",
+                "title": "getClassWithMembers",
                 "description": "Get all members by class id."
               }
             ]
@@ -319,78 +331,61 @@
                 "description": "Save seating arrangements."
               }
             ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "component": "users",
-    "links": [
-      {
-        "title": "Get all students and teachers information",
-        "tab": "",
-        "files": [
+          },
           {
-            "url": "/blob/master/src/EDUGraphAPI.Web/app/school/users.component.ts",
+            "url": "/blob/master/src/EDUGraphAPI.Web/app/services/userService.ts",
             "methods": [
               {
-                "title": "ngOnInit",
-                "description": "Initialize data."
+                "title": "GetUserFavoriteColorByO365Id",
+                "description": "Get favorite color of a user."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Get assignments in this class",
+        "tab": "#assignments",
+        "files": [
+          {
+            "url": "/blob/master/src/EDUGraphAPI.Web/app/school/classdetail.component.ts",
+            "methods": [
+              {
+                "title": "initAssignments",
+                "description": "initialize assignment data."
               }
             ]
           },
           {
-            "url": "/blob/master/src/EDUGraphAPI.Web/app/services/userPhotoService.ts",
-            "methods": [
-              {
-                "title": "getUserPhotoUrl",
-                "description": "Get user photo."
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "title": "Filter all users information",
-        "tab": "#filterall",
-        "files": [
-          {
             "url": "/blob/master/src/EDUGraphAPI.Web/app/school/school.service.ts",
             "methods": [
               {
-                "title": "getUsers",
-                "description": "Get all users within a school."
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "title": "Get all students information",
-        "tab": "#filterstudent",
-        "files": [
-          {
-            "url": "/blob/master/src/EDUGraphAPI.Web/app/school/school.service.ts",
-            "methods": [
+                "title": "GetAssignmentsByClassId",
+                "description": "Get a class's assignments."
+              },
               {
-                "title": "getStudents",
-                "description": "Get students within a school."
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "title": "Get all teachers information",
-        "tab": "#filterteacher",
-        "files": [
-          {
-            "url": "/blob/master/src/EDUGraphAPI.Web/app/school/school.service.ts",
-            "methods": [
+                "title": "createAssignment",
+                "description": "Create an assignment for a class."
+              },
               {
-                "title": "getTeachers",
-                "description": "Get teachers within a school."
+                "title": "AddAssignmentResources",
+                "description": "Add resource to an assignment."
+              },
+              {
+                "title": "PublishAssignment",
+                "description": "Publish an assignment. Set its status from draft to published."
+              },
+              {
+                "title": "AddSubmissionResource",
+                "description": "Add resources to an assignment submission."
+              },
+              {
+                "title": "GetAssignmentSubmissions",
+                "description": "Get submissions of an assignment."
+              },
+              {
+                "title": "getAssignmentSubmissionByUser",
+                "description": "Get a student's assignment submissions."
               }
             ]
           }
@@ -751,6 +746,10 @@
               {
                 "title": "getMe",
                 "description": "Retrieve current user's properties from MS Graph."
+              },
+              {
+                "title": "getMyClasses",
+                "description": "Get current user's classes."
               }
             ]
           },
@@ -766,10 +765,6 @@
           {
             "url": "/blob/master/src/EDUGraphAPI.Web/app/aboutme/aboutme.service.ts",
             "methods": [
-              {
-                "title": "getMyClasses",
-                "description": "Get current user's classes."
-              },
               {
                 "title": "updateFavoriteColor",
                 "description": "Update current user's favorite color."

@@ -13,7 +13,7 @@ var tsProject = ts.createProject('tsconfig.json');
 
 // build server side ts
 gulp.task('ts-server', () => {
-    return gulp.src(['**/*.ts', '!app{,/**}', '!dist{,/**}', '!node_modules{,/**}'])
+    return gulp.src(['**/*.ts', '!app{,/**}', '!App_Data{,/**}', '!dist{,/**}', '!node_modules{,/**}'])
         .pipe(sourcemaps.init({
             loadMaps: true
         }))

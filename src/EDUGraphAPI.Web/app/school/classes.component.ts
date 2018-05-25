@@ -4,10 +4,13 @@
 */
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { SchoolModel } from './school'
+import * as moment from 'moment';
 import { MapUtils } from '../utils/jsonhelper'
-import { UserModel } from './user'
-import { ClassesModel } from './classes';
+import { EducationRole } from '../models/education'
+import { EducationUser } from '../models/educationuser'
+import { EducationClass } from '../models/educationclass'
+import { UserModel } from '../models/user'
+import { EducationSchool } from '../models/educationschool'
 import { SchoolService } from './school.service';
 
 @Component({
@@ -21,11 +24,9 @@ export class ClassesComponent implements OnInit {
 
     private sub: any;
     schoolGuId: string;
-    schoolId: string;
-    classesArray: ClassesModel[] = [];
-    myClassesArray: ClassesModel[] = [];
-    tempClassesArray: ClassesModel[] = [];
-    school: SchoolModel;
+    classesArray: EducationClass[] = [];
+    myClassesArray: EducationClass[] = [];
+    school: EducationSchool;
     nextLink: string;
     isGettingData: boolean = false;
     showNoData: boolean = false;
@@ -40,24 +41,23 @@ export class ClassesComponent implements OnInit {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             this.schoolGuId = params['id'];
-            this.schoolId = params['id2'];
+            this.schoolService
+                .getMe()
+                .subscribe((result) => {
+                    this.me = MapUtils.deserialize(UserModel, result);
+                    if (this.me.ObjectType == "Student") {
+                        this.legendText = "Not Enrolled";
+                    } else {
+                        this.legendText = "Not Teaching";
+                    }
+                });
             this.schoolService
                 .getSchoolById(this.schoolGuId)
                 .subscribe((result) => {
-                    this.school = MapUtils.deserialize(SchoolModel, result);
+                    this.school = MapUtils.deserialize(EducationSchool, result);
+                    this.getClasses();
                 });
-            this.getClasses();
         });
-        this.schoolService
-            .getMe()
-            .subscribe((result) => {
-                this.me = MapUtils.deserialize(UserModel, result);
-                if (this.me.ObjectType == "Student") {
-                    this.legendText = "Not Enrolled";
-                } else {
-                    this.legendText = "Not Teaching";
-                }
-            });
     }
 
     ngOnDestroy() {
@@ -73,12 +73,12 @@ export class ClassesComponent implements OnInit {
     }
 
     gotoMyClasses() {
-        this.router.navigate(['/myclasses', this.schoolGuId, this.schoolId]);
+        this.router.navigate(['/myclasses', this.schoolGuId]);
     }
 
-    gotoDetail(objectId: string) {
+    gotoDetail(classId: string) {
         setTimeout(() => {
-            this.router.navigate(['/classdetail', this.schoolGuId, objectId, this.schoolId]);
+            this.router.navigate(['/classdetail', this.schoolGuId, classId]);
         }, 100);
     }
 
@@ -92,45 +92,48 @@ export class ClassesComponent implements OnInit {
         }
         this.isGettingData = true;
         this.schoolService
-            .getClasses(this.schoolId, this.nextLink)
+            .getClasses(this.schoolGuId, this.nextLink)
             .subscribe((result) => {
                 this.isGettingData = false;
                 this.nextLink = result["@odata.nextLink"];
                 if (this.classesArray === undefined) {
                     this.classesArray = [];
                 }
-                result.value.forEach((obj) => { this.classesArray.push(MapUtils.deserialize(ClassesModel, obj)); });
+                result.value.forEach((obj) => { this.classesArray.push(MapUtils.deserialize(EducationClass, obj)); });
                 if (this.classesArray.length == 0) {
                     this.showNoData = true;
                 }
-                this.schoolService.getMyClasses(this.schoolId)
-                    .subscribe((result) => {
-                        if (this.myClassesArray === undefined) {
-                            this.myClassesArray = [];
-                        }
-                        result.forEach((obj) => {
-                            this.tempClassesArray.push(MapUtils.deserialize(ClassesModel, obj));
-                        });
-                        this.tempClassesArray.forEach((obj) => {
-                            this.schoolService
-                                .getClassById(obj.ObjectId)
-                                .subscribe((result) => {
-                                    var classObj = MapUtils.deserialize(ClassesModel, result);
-                                    classObj.Users = [];
-                                    result.members.forEach((obj) => {
-                                        classObj.Users.push(MapUtils.deserialize(UserModel, obj));
-                                    });
-                                    this.myClassesArray.push(classObj);
-                                    this.classesArray.forEach((objofAllClasses) => {
-                                        if (classObj.ObjectId == objofAllClasses.ObjectId && classObj.EducationObjectType == "Section") {
+                else {
+                    this.schoolService.getMyClasses()
+                        .subscribe((result) => {
+                            if (this.myClassesArray === undefined) {
+                                this.myClassesArray = [];
+                            }
+                            result.forEach((obj) => {
+                                this.myClassesArray.push(MapUtils.deserialize(EducationClass, obj));
+                            });
+                            this.myClassesArray.forEach((obj) => {
+                                this.classesArray.forEach((objofAllClasses) => {
+                                    if (obj.Id == objofAllClasses.Id) {
                                             objofAllClasses.IsMyClasses = true;
-                                            objofAllClasses.Users = classObj.Users;
                                         }
                                     });
-                                });
-                        });
-
-                    });
+                            });
+                            this.classesArray.forEach((classEntity) => {
+                                this.schoolService.getClassWithMembers(classEntity.Id)
+                                    .subscribe((obj) => {
+                                        let tempMembers: EducationUser[] = [];
+                                        obj.members.forEach((member) => {
+                                            tempMembers.push(MapUtils.deserialize(EducationUser, member));
+                                        });
+                                        classEntity.Users = tempMembers;
+                                        classEntity.Term.StartDate = moment.utc(classEntity.Term.StartDate).local().format('MMMM  D YYYY');
+                                        classEntity.Term.EndDate = moment.utc(classEntity.Term.EndDate).local().format('MMMM  D YYYY');
+                                        classEntity.Teachers = classEntity.Users.filter(user => user.PrimaryRole == EducationRole.Teacher);
+                                    })
+                            });
+                        })
+                }
             },
             (error) => {
                 this.isGettingData = false;

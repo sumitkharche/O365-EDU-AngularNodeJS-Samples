@@ -8,7 +8,7 @@ import { MSGraphClient } from '../services/msGraphClient';
 import { Constants } from '../constants';
 import { OrganizationInstance } from '../data/dbContext';
 import { AuthenticationHelper } from '../utils/authenticationHelper';
-import { TokenCacheService } from '../services/TokenCacheService';
+import { TokenCacheService } from '../services/tokenCacheService';
 
 import jwt = require('jsonwebtoken');
 
