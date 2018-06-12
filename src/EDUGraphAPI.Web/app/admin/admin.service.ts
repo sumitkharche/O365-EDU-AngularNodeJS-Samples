@@ -51,7 +51,7 @@ export class AdminService {
         }
     }
 
-    consent() {
+    consent(loginHint: string = null) {
         var redirectUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
         var url = AuthorizationHelper.getUrl(
             'id_token',
@@ -59,7 +59,9 @@ export class AdminService {
             AuthorizationHelper.generateNonce(),
             Constants.MSGraphResource,
             Prompt.AdminConsent,
-            AuthorizationHelper.generateNonce());
+            AuthorizationHelper.generateNonce(),
+            null,
+            loginHint);
         window.location.href = url;
     }
 

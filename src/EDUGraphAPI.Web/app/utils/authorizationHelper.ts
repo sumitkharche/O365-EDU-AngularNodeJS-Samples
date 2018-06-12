@@ -6,7 +6,7 @@ import { Constants } from "../constants";
 
 export class AuthorizationHelper {
 
-    public static getUrl(responseType: string, redirectUrl: string, state: string, resource: string, prompt: string, nonce: string, responseMode: string = null): string {
+    public static getUrl(responseType: string, redirectUrl: string, state: string, resource: string, prompt: string, nonce: string, responseMode: string = null, loginHint: string = null): string {
         var url = Constants.Authority + `oauth2/authorize` +
             `?response_type=` + responseType +
             `&client_id=` + encodeURIComponent(Constants.ClientId) +
@@ -18,6 +18,8 @@ export class AuthorizationHelper {
 
         if (responseMode != null && responseMode != '')
             url += `&response_mode=` + encodeURIComponent(responseMode);
+        if (loginHint != null && loginHint != '')
+            url += `&login_hint=` + encodeURIComponent(loginHint);
 
         return url;
     }

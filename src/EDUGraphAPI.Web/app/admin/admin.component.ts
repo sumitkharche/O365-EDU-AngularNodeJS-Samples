@@ -18,6 +18,7 @@ import { AuthHelper } from "../authHelper/authHelper";
 
 export class AdminComponent implements OnInit {
 
+    admin: any;
     IsAdminConsented: boolean;
     error: string;
     message: string;
@@ -34,6 +35,7 @@ export class AdminComponent implements OnInit {
         }
         this.adminService.getAdmin()
             .subscribe((result) => {
+                this.admin = result;
                 if (!this.adminService.isAdmin(result)) {
                     this.auth.reLogin();
                 } else {
@@ -49,7 +51,7 @@ export class AdminComponent implements OnInit {
     }
 
     consent() {
-        this.adminService.consent();
+        this.adminService.consent(this.admin.o365Email);
     }
 
     unconsent() {
