@@ -141,22 +141,22 @@ Debug the **EDUGraphAPI.Web**:
 
 **GitHub Authorization**
 
-1. Generate Token
+1. Generate Token:
 
    - Open https://github.com/settings/tokens in your web browser.
    - Sign into your GitHub account where you forked this repository.
-   - Click **Generate Token**
-   - Enter a value in the **Token description** text box
+   - Click **Generate Token**.
+   - Enter a value in the **Token description** text box.
    - Select the followings (your selections should match the screenshot below):
      - repo (all) -> repo:status, repo_deployment, public_repo
      - admin:repo_hook -> read:repo_hook
 
    ![](Images/github-new-personal-access-token.png)
 
-   - Click **Generate token**
-   - Copy the token
+   - Click **Generate token**.
+   - Copy the token.
 
-2. Add the GitHub Token to Azure in the Azure Resource Explorer
+2. Add the GitHub Token to Azure in the Azure Resource Explorer:
 
    - Open https://resources.azure.com/providers/Microsoft.Web/sourcecontrols/GitHub in your web browser.
    - Log in with your Azure account.
@@ -167,7 +167,7 @@ Debug the **EDUGraphAPI.Web**:
 
    ![](Images/update-github-token-in-azure-resource-explorer.png)
 
-   - Click **PUT**
+   - Click **PUT**.
 
 **Deploy the Azure Components from GitHub**
 
